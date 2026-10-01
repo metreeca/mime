@@ -1,8 +1,8 @@
-# Metreeca MIME
+# @metreeca/mime
 
 Ready-made tasks for parsing and serialising content by media type.
 
-**Metreeca MIME** brings ready-made [@metreeca/flow](https://github.com/metreeca/flow) tasks for converting content
+**@metreeca/mime** brings ready-made [@metreeca/flow](https://github.com/metreeca/flow) tasks for converting content
 between the usual interchange formats and the values a pipeline works on: parsing documents into records and
 serialising results back into documents. The tasks run under the [@metreeca/gear](https://github.com/metreeca/gear) job
 executor, which supplies the shared services they draw on.

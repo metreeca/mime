@@ -46,8 +46,8 @@ The root `package.json` `workspaces` glob (`packages/*`) covers the framework pa
 immediately under `packages/` (for example `packages/mime`).
 
 Task packages are self-contained leaves named after the media type they handle, not after the library they parse it
-with: `mime-xml`, not `mime-htmlparser`. Each pulls in the core package transitively and only the libraries its own
-media type needs.
+with: `mime-xml`, not `mime-htmlparser`. Each pulls in only the libraries its own media type needs, declaring no
+dependency it doesn't import.
 
 `mime-url` covers retrieval, the remaining packages cover parsing: the media type axis is what the split follows, and
 retrieval sits at its head rather than beside it.

@@ -28,10 +28,10 @@ npm install @metreeca/mime-<type>   # task package, one per media type
 > TypeScript consumers must use `"moduleResolution": "nodenext"/"node16"/"bundler"` in `tsconfig.json`.
 > The legacy `"node"` resolver is not supported.
 
-Install the core package, then add a task package for each media type the pipeline handles. Task packages are
-self-contained leaves, each pulling in only the libraries its own media type needs. The job executor comes from
-[@metreeca/gear](https://github.com/metreeca/gear), which the core package pulls in transitively; install it directly to
-set up and run a job.
+Install a task package for each media type the pipeline handles. Task packages are self-contained leaves, each pulling
+in only the libraries its own media type needs. The job executor comes from
+[@metreeca/gear](https://github.com/metreeca/gear), which no package pulls in on its own: install it directly to set up
+and run a job.
 
 | Package               | Description                                  |
 |-----------------------|----------------------------------------------|

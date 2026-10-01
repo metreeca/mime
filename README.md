@@ -36,14 +36,11 @@ set up and run a job.
 | Package               | Description                                  |
 |-----------------------|----------------------------------------------|
 | [@metreeca/mime]      | Content access contracts and shared services |
-| [@metreeca/mime-url]  | URL retrieval tasks                          |
 | [@metreeca/mime-csv]  | CSV parsing tasks                            |
 | [@metreeca/mime-json] | JSON parsing tasks                           |
 | [@metreeca/mime-xml]  | XML and HTML parsing tasks                   |
 
 [@metreeca/mime]: https://metreeca.github.io/mime/modules/_metreeca_mime.html
-
-[@metreeca/mime-url]: https://metreeca.github.io/mime/modules/_metreeca_mime-url.html
 
 [@metreeca/mime-csv]: https://metreeca.github.io/mime/modules/_metreeca_mime-csv.html
 

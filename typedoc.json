@@ -3,7 +3,7 @@
     "packages/*"
   ],
   "entryPointStrategy": "packages",
-  "name": "Metreeca MIME",
+  "name": "@metreeca/mime",
   "out": "docs",
   "readme": "README.md",
   "hostedBaseUrl": "https://metreeca.github.io/mime/",

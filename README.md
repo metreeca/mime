@@ -38,6 +38,7 @@ set up and run a job.
 | [@metreeca/mime]      | Content access contracts and shared services |
 | [@metreeca/mime-csv]  | CSV parsing tasks                            |
 | [@metreeca/mime-json] | JSON parsing tasks                           |
+| [@metreeca/mime-rdf]  | RDF parsing tasks                            |
 | [@metreeca/mime-xml]  | XML and HTML parsing tasks                   |
 
 [@metreeca/mime]: https://metreeca.github.io/mime/modules/_metreeca_mime.html
@@ -45,6 +46,8 @@ set up and run a job.
 [@metreeca/mime-csv]: https://metreeca.github.io/mime/modules/_metreeca_mime-csv.html
 
 [@metreeca/mime-json]: https://metreeca.github.io/mime/modules/_metreeca_mime-json.html
+
+[@metreeca/mime-rdf]: https://metreeca.github.io/mime/modules/_metreeca_mime-rdf.html
 
 [@metreeca/mime-xml]: https://metreeca.github.io/mime/modules/_metreeca_mime-xml.html
 

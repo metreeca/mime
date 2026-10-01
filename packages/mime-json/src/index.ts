@@ -17,8 +17,8 @@
 /**
  * JSON processing tasks.
  *
- * Parses JSON payloads, addresses the values they hold by path, retains the ones meeting the constraints a consumer
- * states, and narrows them to the types it expects.
+ * Parses JSON documents into values, selects nested values by path, filters values against validation constraints,
+ * and narrows them to the expected primitive types.
  *
  * @module index
  *

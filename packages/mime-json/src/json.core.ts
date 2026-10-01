@@ -33,7 +33,7 @@ const JSONType = /^[-\w.]+\/(?:[-\w.]+\+)?json$/i;
 /**
  * The charsets a JSON document is encoded in.
  *
- * Matches the labels UTF-8 is stated under, the only encoding JSON exchanged between systems is written in.
+ * Matches the labels of UTF-8, the only encoding allowed for JSON exchanged between systems.
  *
  * @see {@link https://www.rfc-editor.org/rfc/rfc8259#section-8.1 RFC 8259 § 8.1 - Character Encoding}
  */

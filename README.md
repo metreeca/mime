@@ -2,12 +2,12 @@
 
 Ready-made tasks for parsing and serialising content by media type.
 
-**Metreeca MIME** brings ready-made [@metreeca/flow](https://github.com/metreeca/flow) tasks for bringing external
-content into a pipeline: retrieving it from remote or local sources and converting the usual interchange formats into
-the values a pipeline works on. The tasks run under the [@metreeca/gear](https://github.com/metreeca/gear) job executor,
-which supplies the shared services they draw on.
+**Metreeca MIME** brings ready-made [@metreeca/flow](https://github.com/metreeca/flow) tasks for converting content
+between the usual interchange formats and the values a pipeline works on: parsing documents into records and
+serialising results back into documents. The tasks run under the [@metreeca/gear](https://github.com/metreeca/gear) job
+executor, which supplies the shared services they draw on.
 
-- **Ready-Made Tasks**: retrieval and parsing, chaining alongside any other task
+- **Ready-Made Tasks**: parsing and serialisation, chaining alongside any other task
 - **Minimal Footprint**: one package per media type, each pulling in only the libraries that type needs
 
 > [!IMPORTANT]
@@ -36,9 +36,9 @@ set up and run a job.
 | Package               | Description                                  |
 |-----------------------|----------------------------------------------|
 | [@metreeca/mime]      | Content access contracts and shared services |
-| [@metreeca/mime-csv]  | CSV parsing tasks                            |
-| [@metreeca/mime-json] | JSON parsing tasks                           |
-| [@metreeca/mime-xml]  | XML and HTML parsing tasks                   |
+| [@metreeca/mime-csv]  | CSV processing tasks                         |
+| [@metreeca/mime-json] | JSON processing tasks                        |
+| [@metreeca/mime-xml]  | XML and HTML processing tasks                |
 
 [@metreeca/mime]: https://metreeca.github.io/mime/modules/_metreeca_mime.html
 

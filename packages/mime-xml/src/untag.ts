@@ -22,88 +22,79 @@ import { process } from "./untag.core.js";
 
 
 /**
- * Creates a markdown renderer.
+ * Creates a Markdown renderer.
  *
- * The generated task converts a feed of parsed X/HTML trees into a feed of markdown text, one rendering per tree, so
- * that a consumer reading prose, a language model among them, works on text rather than on markup.
+ * The task converts a feed of parsed X/HTML trees into a feed of Markdown text, one rendering per tree, so that
+ * consumers of prose, such as language models, work on text rather than on markup.
  *
- * A tree holding neither content nor a title nor a base URL is converted to an empty string, so that renderings stay
- * aligned with the trees they were drawn from.
+ * Trees without content, title or base URL are rendered as an empty string, so that renderings stay aligned with the
+ * input feed.
  *
- * Where a tree states a title or a base URL, its rendering opens with a YAML frontmatter block stating them as `title`
- * and `url`, so that a consumer reads the page the text belongs to alongside the text itself. Each is written as a
- * quoted scalar, so that the punctuation a headline or a query string carries doesn't unsettle the block, and a field
- * is omitted where the tree states no value for it, so that nothing is guessed at.
+ * If a tree has a title or a base URL, its rendering opens with a YAML frontmatter block holding them as `title` and
+ * `url`. Values are written as quoted scalars, so that punctuation in headlines or query strings can't break the
+ * block. Fields without a value are omitted.
  *
- * The title is the first `title` element a tree states outside the framing a reader is not after, so that the caption
- * of an embedded object is not mistaken for it; one carrying no text counts as none. The base URL is the one recorded
- * by the root of the tree, that is by the root element the tree is converted from or by the first one a document
- * holds; a base resolving to no absolute URL, as a relative reference standing on its own does, counts as none.
+ * The title is the first `title` element outside page framing, so that captions of embedded objects are not mistaken
+ * for it; a title without text is ignored. The base URL is the one recorded on the root element of the tree, or on the
+ * first root element of a document; a base URL that doesn't resolve to an absolute URL is ignored.
  *
- * Elements are rendered as follows, names matched as the tree carries them, case insensitively:
+ * Elements are rendered as follows, with names matched case-insensitively:
  *
- * - `h1`, `h2`, `h3` — a heading of the matching level, set off by a blank line, left out where it carries no text
- * - `p`, `section`, `article` — the content, set off by a blank line
- * - `div` — the content, set off by a blank line where the element states text of its own or wraps a lone element,
- *   whitespace aside, and closed by a line break otherwise, so that a field reads as a paragraph while the wrappers a
- *   page is laid out with don't split its content into blocks of their own
- * - `ul`, `ol` — a list set off from the surrounding content by a blank line, ordered lists marked as unordered ones
- * - `li` — an item marked with `-`, indented by two spaces for each enclosing list beyond the outermost, its content
- *   opening on the line the marker is written on, however the item lays it out, left out where it carries neither text
- *   nor an image
- * - `br` — a line break, two of them laying down the blank line a paragraph is often split with, a longer run
- *   saturating at that blank line and a run opening the text dropped
- * - `hr` — a thematic break, set off by a blank line
- * - `a` — a link to the `href` stated, labelled by the content, left out where it carries neither text nor an image
- * - `img` — an image reference to the `src` stated, labelled by the `alt` text
- * - `strong`, `b` — strong emphasis, the whitespace bordering the content written outside the markers, as markers
- *   padded with it read as text rather than as emphasis, left out where it carries no text, though the space it holds
- *   is kept
- * - `em`, `i` — emphasis, laid out as strong emphasis is
- * - `script` — a fenced `json` block, if the type is `application/ld+json`, set off by a blank line; nothing
- *   otherwise
- * - `head`, `title`, `style`, `noscript` — nothing, the title being stated by the frontmatter instead
- * - `nav`, `header`, `footer`, `aside`, `menu`, `menuitem`, `toolbar` — nothing, whatever they hold, so that the
- *   navigation, headers, footers and sidebars a page is framed by leave no text behind
- * - `form`, `input`, `button`, `select`, `textarea`, `label`, `fieldset`, `legend` — nothing, whatever they hold, so
- *   that the controls a page is operated through, the captions they carry among them, leave no text behind
- * - `iframe`, `embed`, `object`, `applet`, `canvas`, `svg`, `audio`, `video`, `track`, `source` — nothing, whatever
- *   they hold, so that the objects a page embeds leave no text behind
+ * - `h1`, `h2`, `h3` — a heading of the matching level, set off by blank lines; omitted if it has no text
+ * - `p`, `section`, `article` — the content, set off by blank lines
+ * - `div` — the content, set off by blank lines if the element has text of its own or wraps a single element, and
+ *   followed by a line break otherwise, so that fields read as paragraphs while layout wrappers don't split content
+ *   into separate blocks
+ * - `ul`, `ol` — a list, set off by blank lines; ordered lists are rendered as unordered ones
+ * - `li` — an item marked with `-` and indented by two spaces for each enclosing list beyond the outermost; its content
+ *   starts on the marker line; omitted if it has neither text nor images
+ * - `br` — a line break; two or more consecutive breaks produce a single blank line, and breaks at the start of the
+ *   text are dropped
+ * - `hr` — a thematic break, set off by blank lines
+ * - `a` — a link to the `href` target, labelled by the content; omitted if it has neither text nor images
+ * - `img` — an image reference to the `src` target, labelled by the `alt` text
+ * - `strong`, `b` — strong emphasis; surrounding whitespace is moved outside the markers, so that they are read as
+ *   emphasis rather than as text; omitted if it has no text, though its whitespace is kept
+ * - `em`, `i` — emphasis, rendered like strong emphasis
+ * - `script` — a fenced `json` block set off by blank lines, if the type is `application/ld+json`; nothing otherwise
+ * - `head`, `title`, `style`, `noscript` — nothing; the title is rendered in the frontmatter instead
+ * - `nav`, `header`, `footer`, `aside`, `menu`, `menuitem`, `toolbar` — nothing, including all their content, so that
+ *   page framing leaves no text behind
+ * - `form`, `input`, `button`, `select`, `textarea`, `label`, `fieldset`, `legend` — nothing, including all their
+ *   content, so that controls and their captions leave no text behind
+ * - `iframe`, `embed`, `object`, `applet`, `canvas`, `svg`, `audio`, `video`, `track`, `source` — nothing, including
+ *   all their content, so that embedded objects leave no text behind
  *
- * Every other element contributes its content, the `html` and `body` a page is wrapped in among them, so that the
- * wrappers a page is built from leave no trace of their own. A link or an item is kept for the content a reader is
- * shown, the elements rendered as nothing counting for none of it, so that a decorative link leaves no empty label
- * behind. The text of a heading, of emphasis and of the frontmatter title likewise leaves them out, so that the
- * caption of a control or of a graphic doesn't reach the text through the prose enclosing it.
+ * All other elements, including the `html` and `body` page wrappers, are rendered as their content. Content rendered
+ * as nothing doesn't count when deciding whether links and items have text, so decorative links leave no empty labels
+ * behind. It is also excluded from the text of headings, emphasis and the frontmatter title, so that captions of
+ * controls and graphics don't leak into the surrounding prose.
  *
  * > [!IMPORTANT]
  * >
- * > A page stating its content inside a form, as a filtered listing or a page-wide server-side form does, is thus
- * > rendered as the content outside the form alone, possibly as nothing at all. Where a page is laid out that way,
- * > select the region to convert with an {@link xpath} expression reaching inside the form, which {@link focus}
- * > leaves out as framing too.
+ * > Pages holding their content inside a form, such as filtered listings or pages wrapped in a server-side form, are
+ * > rendered without that content, possibly as an empty string. For such pages, select the region to render with an
+ * > {@link xpath} expression reaching inside the form; {@link focus} also treats forms as framing.
  *
- * Character data is rendered with runs of spaces, control characters and typographic separators, the no-break space
- * among them, collapsed to a single space, whatever the markup lays out; a run bordering a text node is kept, so that
- * emphasis misplaced with respect to the surrounding spaces doesn't run words together. A comment carries no text but
- * counts as a space, so that the markers a framework leaves between elements keep the words on either side apart, as
- * do the fields a page lays out side by side. Text bordering an element runs into it as stated, so that a word split
- * across an element and the text beside it is not broken apart. A space never opens a line or closes a link label, so
- * that the whitespace a page is laid out with doesn't reach the text; leading and trailing whitespace is stripped from
- * each rendering.
+ * In text, runs of spaces, control characters and typographic separators (including no-break spaces) are collapsed to
+ * a single space. Whitespace at the edges of a text node is kept, so that emphasis misplaced with respect to the
+ * surrounding spaces doesn't run words together. Comments are rendered as a space, so that words separated only by
+ * framework markers or adjacent fields stay apart. Text directly adjacent to an element is joined to it without a
+ * space, so that words split across element boundaries stay whole. Lines never start with a space, link labels never
+ * end with one, and each rendering is trimmed.
  *
  * > [!NOTE]
  * >
- * > - **Incremental**: each rendering is emitted as soon as its tree is drawn, so the feed produced runs dry as the
- * >   feed drawn from does and an endless source is read as long as it is consumed.
- * > - **Streaming**: trees are drawn one at a time and released as soon as their rendering is assembled, so the length
- * >   of the feed weighs on memory no more than a single tree does.
- * > - **Stateless**: every tree is converted on its own, so the outcome is unaffected by how the feed is split across
+ * > - **Incremental**: each rendering is emitted as soon as its tree is drawn, so endless sources are processed for as
+ * >   long as the feed is consumed.
+ * > - **Streaming**: trees are processed one at a time and released once rendered, so memory use doesn't grow with the
+ * >   length of the feed.
+ * > - **Stateless**: each tree is rendered independently, so the result doesn't depend on how the feed is split across
  * >   nested feeds or runs.
  *
- * @returns A task converting a feed of parsed X/HTML trees into a feed of markdown text
+ * @returns A task converting a feed of parsed X/HTML trees into a feed of Markdown text
  *
- * @throws {@link !Error Error} While the feed is consumed, whatever the source reports while producing trees
+ * @throws {@link !Error Error} While the feed is consumed, if the source feed fails
  *
  * @see {@link https://spec.commonmark.org/ CommonMark Spec}
  * @see {@link https://json-ld.org/ JSON-LD}

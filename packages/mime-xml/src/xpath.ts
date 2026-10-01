@@ -26,8 +26,8 @@ export type { Attribute, Target } from "./xpath.core.js";
 /**
  * XPath selector over parsed X/HTML trees.
  *
- * Selects the values held by a fixed set of {@link Target} nodes, addressing them with XPath 1.0 expressions. The
- * target set is settled when the selector is created and cannot be changed afterwards.
+ * Selects nodes and computed values from a set of {@link Target} nodes, using XPath 1.0 expressions. The target set is
+ * fixed when the selector is created.
  *
  * @see {@link https://www.w3.org/TR/1999/REC-xpath-19991116/ XML Path Language (XPath) 1.0}
  */
@@ -36,38 +36,34 @@ export type XPath = {
 	/**
 	 * Selects values.
 	 *
-	 * A single selection reaches across the whole target set: the values retrieved from each target are merged into one
-	 * list, sparing the caller a loop of its own. Every axis, node test, predicate, operator and core function XPath
-	 * 1.0 defines is available, each target taken in its turn as the context node.
+	 * Each selection spans the whole target set: the expression is evaluated with each target as context node, and the
+	 * results are merged into a single list. All XPath 1.0 axes, node tests, predicates, operators and core functions
+	 * are supported.
 	 *
-	 * An expression computing a string, a number or a boolean, `count(//item)` among them, reports the value it
-	 * computed for each target, so that whatever the language can express is reached the same way. A value an
-	 * expression computed holds no tree of its own, and so selects nothing in its turn.
+	 * Expressions computing a string, a number or a boolean, such as `count(//item)`, return the computed value for
+	 * each target. Computed values have no tree, so selecting from them returns nothing.
 	 *
-	 * Names are matched as the tree holds them, case sensitively, prefixes compared as written and no `xmlns`
-	 * declaration read, so that a single set of expressions serves both the XML trees and the HTML ones, whose names
-	 * are folded to lower case as they are parsed:
+	 * Names are matched case-sensitively, exactly as stored in the tree, and namespaces are not resolved. The same
+	 * expressions therefore work on both XML and HTML trees, whose names are folded to lowercase while parsing:
 	 *
-	 * - an unprefixed name test matches an unprefixed name alone, so `item` addresses `<item>` however the document
-	 *   declares a default namespace, and leaves `<d:item>` out
-	 * - a prefixed name test matches the prefix as written, so `d:b` addresses `<d:b>` whatever URI the document binds
-	 *   `d` to, and nothing at all where the same element is written under another prefix
-	 * - `local-name()` reports a name without its prefix and `name()` reports it whole, so `<d:b>` answers to
-	 *   `local-name()='b'` and to `name()='d:b'` alike
-	 * - `namespace-uri()` reports the prefix a name carries rather than the URI a declaration binds it to, as no
-	 *   declaration is read; the `xml` prefix is the exception, bound by definition, so `@xml:base` and `lang()` read
-	 *   what they are meant to
-	 * - the `xmlns` declarations themselves are ordinary attributes, reported by an attribute step like any other
+	 * - an unprefixed name test matches unprefixed names only, so `item` matches `<item>` even under a default
+	 *   namespace, but not `<d:item>`
+	 * - a prefixed name test matches the prefix as written, so `d:b` matches `<d:b>` whatever namespace URI `d` is
+	 *   bound to, but not the same element written with a different prefix
+	 * - `local-name()` returns a name without its prefix and `name()` returns it in full, so `<d:b>` matches both
+	 *   `local-name()='b'` and `name()='d:b'`
+	 * - `namespace-uri()` returns the prefix of a name rather than a namespace URI; the `xml` prefix is the exception,
+	 *   bound to its standard URI, so `@xml:base` and `lang()` work as specified
+	 * - `xmlns` declarations are ordinary attributes, selected by attribute steps like any other
 	 *
-	 * The XML declaration and the document type declaration are not nodes, as the language prescribes, and a processing
-	 * instruction is not one either, so `processing-instruction()` selects nothing; `namespace::` selects nothing in
-	 * its turn, as no namespace node is held. A `CDATA` section is a text node holding what it wraps, rather than a
-	 * node of its own.
+	 * XML declarations, document type declarations and processing instructions are not part of the tree, so
+	 * `processing-instruction()` selects nothing. Namespace nodes are not supported either, so `namespace::` selects
+	 * nothing. `CDATA` sections are read as text nodes.
 	 *
 	 * @param path The selection expression
 	 *
 	 * @returns An immutable list of the values selected by `path`, ordered by target and, within each target, in
-	 *          document order, each node reported once; empty if `path` selects no value
+	 *          document order, without duplicate nodes; empty if `path` selects no value
 	 *
 	 * @throws {@link !SyntaxError SyntaxError} If `path` is malformed
 	 */
@@ -81,21 +77,21 @@ export type XPath = {
 /**
  * Creates an XPath selector task.
  *
- * The generated task converts a feed of parsed X/HTML trees into a feed of {@link XPath} selectors, one selector per
- * tree, so that a consumer addresses what a tree holds by expression rather than walking it.
+ * The task converts a feed of parsed X/HTML trees into a feed of {@link XPath} selectors, one selector per tree, so
+ * that downstream tasks select nodes by expression rather than walking the tree.
  *
  * > [!NOTE]
  * >
- * > - **Incremental**: each selector is emitted as soon as its tree is drawn, so the feed produced runs dry as the
- * >   feed drawn from does and an endless source is read as long as it is consumed.
- * > - **Streaming**: trees are drawn one at a time and none retained, so the length of the feed weighs on memory no
- * >   more than a single tree does; a selector keeps the tree it targets for as long as a consumer holds it.
- * > - **Stateless**: every tree is targeted on its own, so the outcome is unaffected by how the feed is split across
- * >   nested feeds or runs.
+ * > - **Incremental**: each selector is emitted as soon as its tree is drawn, so endless sources are processed for as
+ * >   long as the feed is consumed.
+ * > - **Streaming**: trees are processed one at a time and none is retained, so memory use doesn't grow with the
+ * >   length of the feed; each selector keeps its target tree alive for as long as it is referenced.
+ * > - **Stateless**: each tree is processed independently, so the result doesn't depend on how the feed is split
+ * >   across nested feeds or runs.
  *
  * @returns A task converting a feed of parsed X/HTML trees into a feed of XPath selectors
  *
- * @throws {@link !Error Error} While the feed is consumed, whatever the source reports while producing trees
+ * @throws {@link !Error Error} While the feed is consumed, if the source feed fails
  *
  * @group Factories
  */
@@ -104,27 +100,26 @@ export function xpath(): Task<AnyNode, XPath>; // without a mapper the selector 
 /**
  * Creates an XPath mapping task.
  *
- * The generated task converts a feed of parsed X/HTML trees into a feed of mapped results, one result per tree, so that
- * a consumer works on the shape it is after rather than on the one the markup states.
+ * The task converts a feed of parsed X/HTML trees into a feed of mapped results, one result per tree, so that
+ * downstream tasks work on the shape they need rather than on the markup.
  *
  * > [!NOTE]
  * >
- * > - **Incremental**: each result is emitted as soon as its tree is drawn, so the feed produced runs dry as the feed
- * >   drawn from does and an endless source is read as long as it is consumed.
- * > - **Streaming**: trees are drawn one at a time and released as soon as their result is assembled, so the length of
- * >   the feed weighs on memory no more than a single tree does.
- * > - **Stateless**: every tree is mapped on its own, so the outcome is unaffected by how the feed is split across
+ * > - **Incremental**: each result is emitted as soon as its tree is drawn, so endless sources are processed for as
+ * >   long as the feed is consumed.
+ * > - **Streaming**: trees are processed one at a time and released once mapped, so memory use doesn't grow with the
+ * >   length of the feed.
+ * > - **Stateless**: each tree is mapped independently, so the result doesn't depend on how the feed is split across
  * >   nested feeds or runs.
  *
- * @typeParam V The type of the result mapped from each incoming tree
+ * @typeParam V The type of the results mapped from incoming trees
  *
  * @param mapper The mapping function, applied to an {@link XPath} selector targeting the tree being processed
  *
  * @returns A task converting a feed of parsed X/HTML trees into a feed of mapped results
  *
- * @throws {@link !Error Error} While the feed is consumed, whatever the source reports while producing trees, or
- *                              whatever `mapper` reports while mapping a tree, including a {@link !SyntaxError
- *                              SyntaxError} for a malformed expression
+ * @throws {@link !Error Error} While the feed is consumed, if the source feed fails or `mapper` throws, including a
+ *                              {@link !SyntaxError SyntaxError} for a malformed expression
  *
  * @example
  *
@@ -144,15 +139,15 @@ export function xpath<V>(mapper: (path: XPath) => V): Task<AnyNode, V>;
 /**
  * Creates an XPath selector over given nodes.
  *
- * Targets nodes already at hand, outside a feed, so that a consumer addressing a node it holds does so exactly as one
- * addressing a tree drawn from a source.
+ * Targets nodes already at hand, outside a feed, with the same selection semantics as the selectors emitted by the
+ * feed tasks.
  *
  * > [!IMPORTANT]
  * >
- * > A call with no node, spreading an empty list included, creates a task over a feed of trees rather than a selector
- * > with an empty target set.
+ * > A call without nodes, including one spreading an empty list, creates a selector task over a feed rather than a
+ * > selector with an empty target set.
  *
- * @param nodes The target nodes, in the order they are to be selected from
+ * @param nodes The target nodes, in selection order
  *
  * @returns An immutable selector targeting `nodes`
  *

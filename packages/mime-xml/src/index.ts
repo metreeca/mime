@@ -17,8 +17,8 @@
 /**
  * XML and HTML processing tasks.
  *
- * Parses XML and HTML payloads, addresses the nodes they hold by XPath expression, and reads the selected values as
- * the types a consumer expects.
+ * Parses XML and HTML documents into a shared tree shape, selects nodes by XPath expression, extracts the main content
+ * of web pages, renders it as Markdown, and reads selected values as the expected primitive types.
  *
  * @module index
  *
@@ -42,14 +42,14 @@ export * from "./untag.js";
 /**
  * Reads a selected value as a boolean.
  *
- * Accepts the two forms XPath itself writes a boolean in, so that a boolean an expression computed is read back
- * unchanged and anything else is refused rather than guessed at.
+ * Accepts only the `true` and `false` forms produced by XPath itself, so that computed booleans are read back unchanged
+ * and any other text is rejected rather than guessed at.
  *
- * @param node The {@link Target} to read, either a node a selection reached or a value an expression computed
+ * @param node The {@link Target} to read, either a selected node or a computed value
  *
- * @returns `true` if the text `node` is written as is `true`; `false` if it is `false`
+ * @returns `true` if the text of `node` is `true`; `false` if it is `false`
  *
- * @throws {@link !TypeError TypeError} If the text `node` is written as is neither `true` nor `false`
+ * @throws {@link !TypeError TypeError} If the text of `node` is neither `true` nor `false`
  */
 export function boolean(node: Target): boolean {
 
@@ -62,14 +62,13 @@ export function boolean(node: Target): boolean {
 /**
  * Reads a selected value as a number.
  *
- * A value holding no text names no number, rather than standing for zero, so that a missing figure is refused rather
- * than passed downstream as a plausible one.
+ * Empty text is rejected rather than read as zero, so that a missing figure isn't passed downstream as a plausible one.
  *
- * @param node The {@link Target} to read, either a node a selection reached or a value an expression computed
+ * @param node The {@link Target} to read, either a selected node or a computed value
  *
- * @returns The number the text `node` is written as names
+ * @returns The number written in the text of `node`
  *
- * @throws {@link !TypeError TypeError} If the text `node` is written as doesn't name a finite number
+ * @throws {@link !TypeError TypeError} If the text of `node` is not a finite number
  */
 export function number(node: Target): number {
 
@@ -82,15 +81,13 @@ export function number(node: Target): number {
 /**
  * Reads a selected value as text.
  *
- * Takes the text a value is written as, as the XPath `string()` function converts it: the value of an attribute, the
- * character data held by the tree rooted at any other node, the comments within it contributing none, and the written
- * form of a computed string, number or boolean.
+ * Converts values as the XPath `string()` function does: attributes are read as their value, other nodes as the text
+ * content of their subtree (comments excluded), and computed strings, numbers or booleans as their written form.
  *
- * @param node The {@link Target} to read, either a node a selection reached or a value an expression computed
+ * @param node The {@link Target} to read, either a selected node or a computed value
  *
- * @returns The text `node` is written as, with every run of whitespace replaced by a single space and the outer
- *          whitespace dropped, so that content laid out across several lines reads as the evenly spaced text a label
- *          expects
+ * @returns The text of `node`, with whitespace runs collapsed to a single space and leading and trailing whitespace
+ *          removed, so that content spread across several lines reads as evenly spaced text
  *
  * @see {@link https://www.w3.org/TR/1999/REC-xpath-19991116/#function-string XML Path Language (XPath) 1.0 - string()}
  */
@@ -101,17 +98,16 @@ export function string(node: Target): string {
 /**
  * Reads a selected value as a link.
  *
- * Resolves the reference against the base URL in scope where it was drawn from, as the {@link xml} and {@link html}
- * parsers record it, so that a consumer works on an absolute IRI however deeply the reference sat in the document it
- * came from. A tree stating no base URL, as one parsed from text under no stated base does, leaves the reference as it
- * stands, as does a value an expression computed.
+ * Resolves the reference against the base URL in scope at `node`, as recorded by the {@link xml} and {@link html}
+ * parsers, so that consumers always work on absolute IRIs, wherever the reference appears in the document. References
+ * are returned unresolved for computed values and for trees without a base URL, such as trees parsed from text
+ * without a `base` argument.
  *
- * @param node The {@link Target} to read, either a node a selection reached or a value an expression computed
+ * @param node The {@link Target} to read, either a selected node or a computed value
  *
- * @returns The IRI the text `node` is written as names, resolved against the base URL in scope of `node` where the
- *          tree states one
+ * @returns The IRI written in the text of `node`, resolved against the base URL in scope at `node`, if any
  *
- * @throws {@link !TypeError TypeError} If the text `node` is written as names neither an IRI nor a relative reference
+ * @throws {@link !TypeError TypeError} If the text of `node` is neither an IRI nor a relative reference
  *
  * @see {@link https://www.rfc-editor.org/rfc/rfc3987 RFC 3987 Internationalized Resource Identifiers}
  * @see {@link https://www.w3.org/TR/xmlbase/ XML Base}

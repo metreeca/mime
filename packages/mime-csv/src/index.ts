@@ -17,6 +17,8 @@
 /**
  * CSV processing tasks.
  *
+ * Parses CSV documents into records, keyed by column label or by position.
+ *
  * @module index
  *
  * @see {@link https://www.rfc-editor.org/rfc/rfc4180 RFC 4180 Common Format and MIME Type for CSV Files}

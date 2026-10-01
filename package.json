@@ -1,7 +1,7 @@
 {
   "private": true,
   "version": "0.1.0",
-  "description": "Ready-made tasks for retrieving and parsing content by media type.",
+  "description": "Ready-made tasks for parsing and serialising content by media type.",
   "keywords": [
     "typescript",
     "pipeline",

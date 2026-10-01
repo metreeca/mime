@@ -1,6 +1,6 @@
 # Metreeca MIME
 
-Ready-made tasks for retrieving and parsing content by media type.
+Ready-made tasks for parsing and serialising content by media type.
 
 **Metreeca MIME** brings ready-made [@metreeca/flow](https://github.com/metreeca/flow) tasks for bringing external
 content into a pipeline: retrieving it from remote or local sources and converting the usual interchange formats into

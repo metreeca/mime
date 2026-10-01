@@ -37,12 +37,15 @@ set up and run a job.
 |-----------------------|----------------------------------------------|
 | [@metreeca/mime]      | Content access contracts and shared services |
 | [@metreeca/mime-csv]  | CSV parsing tasks                            |
+| [@metreeca/mime-ical] | iCalendar parsing tasks                      |
 | [@metreeca/mime-json] | JSON parsing tasks                           |
 | [@metreeca/mime-xml]  | XML and HTML parsing tasks                   |
 
 [@metreeca/mime]: https://metreeca.github.io/mime/modules/_metreeca_mime.html
 
 [@metreeca/mime-csv]: https://metreeca.github.io/mime/modules/_metreeca_mime-csv.html
+
+[@metreeca/mime-ical]: https://metreeca.github.io/mime/modules/_metreeca_mime-ical.html
 
 [@metreeca/mime-json]: https://metreeca.github.io/mime/modules/_metreeca_mime-json.html
 

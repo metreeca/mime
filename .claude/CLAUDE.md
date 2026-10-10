@@ -24,7 +24,7 @@ reimplementing them, and keep the service contracts compatible with the ones `@m
 - [@metreeca/flow](https://github.com/metreeca/flow) - Composable async iterable processing
 - [@metreeca/tape](https://github.com/metreeca/tape) - Simplified facade for the LogTape logging framework
 - [@metreeca/gear](https://github.com/metreeca/gear) - Job executor and shared services for data pipelines, which this
-  repository builds on
+	repository builds on
 
 # NPM Scripts
 

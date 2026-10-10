@@ -82,13 +82,13 @@ export function isBase(value: unknown): value is IRI {
  */
 export function title(node: AnyNode): undefined | Element {
 
-	const [ heading ] = stated(hasChildren(node) ? node.children : []);
+	const [heading] = stated(hasChildren(node) ? node.children : []);
 
 	return heading !== undefined && text(heading, Ignored).trim() !== "" ? heading : undefined;
 
 
 	function stated(nodes: readonly AnyNode[]): readonly Element[] {
-		return nodes.filter(isTag).flatMap(element => name(element) === "title" ? [ element ] // states its own
+		return nodes.filter(isTag).flatMap(element => name(element) === "title" ? [element] // states its own
 			: Ignored.has(name(element)) ? [] // framing states captions a reader is not after
 				: stated(element.children)
 		);

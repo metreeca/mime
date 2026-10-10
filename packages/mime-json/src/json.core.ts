@@ -59,7 +59,7 @@ export async function process<V extends Value = Object>(document: string | Respo
 
 	async function read(response: Response): Promise<string> {
 
-		const [ type, parameters ] = parseItem(response.headers.get("Content-Type"));
+		const [type, parameters] = parseItem(response.headers.get("Content-Type"));
 		const charset = parameters.get("charset") ?? "";
 
 		if ( type && !JSONType.test(type) ) {

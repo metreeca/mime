@@ -180,7 +180,7 @@ function stated(node: AnyNode): readonly ChildNode[] {
 
 function projected(element: Element): readonly Attribute[] {
 	return kept(handles, element, stating => Object.entries(stating.attribs)
-		.map(([ name, value ]) => Object.freeze({ name, value, parent: stating }))
+		.map(([name, value]) => Object.freeze({ name, value, parent: stating }))
 	);
 }
 
@@ -226,7 +226,7 @@ function qualified(node: Node): string {
 }
 
 function local(name: string): string {
-	return name.slice(name.lastIndexOf(":") + 1);
+	return name.slice(name.lastIndexOf(":")+1);
 }
 
 function prefixed(name: string): undefined | string {
@@ -259,17 +259,17 @@ function order(x: Node, y: Node): number {
 
 
 	function chain(node: Node): readonly Node[] {
-		return node.parent === null ? [ node ] : [ ...chain(node.parent), node ];
+		return node.parent === null ? [node] : [...chain(node.parent), node];
 	}
 
 	function compare(xs: readonly Node[], ys: readonly Node[]): number {
 
-		const [ x, ...xt ] = xs;
-		const [ y, ...yt ] = ys;
+		const [x, ...xt] = xs;
+		const [y, ...yt] = ys;
 
-		return x === undefined || y === undefined ? xs.length - ys.length // one node holds the other
+		return x === undefined || y === undefined ? xs.length-ys.length // one node holds the other
 			: x === y ? compare(xt, yt)
-				: position(x) - position(y);
+				: position(x)-position(y);
 
 	}
 
@@ -281,7 +281,7 @@ function order(x: Node, y: Node): number {
 
 			const attributes = projected(node.parent);
 
-			return attributes.indexOf(node) - attributes.length;
+			return attributes.indexOf(node)-attributes.length;
 
 		} else if ( node.parent === null ) {
 
@@ -383,7 +383,7 @@ export function base(value: Target): undefined | URL {
 		const outer = node.parent === null ? [] : scoped(node.parent);
 		const stated = isElement(node) ? node.attribs[XMLBase] : undefined;
 
-		return stated === undefined ? outer : [ ...outer, stated ];
+		return stated === undefined ? outer : [...outer, stated];
 
 	}
 
@@ -418,10 +418,10 @@ export function select(value: Target, path: string): readonly Target[] {
 
 		const selection = evaluator.evaluate(path, value, resolver);
 
-		return selection.resultType === XPathResult.NUMBER_TYPE ? [ selection.numberValue ]
-			: selection.resultType === XPathResult.STRING_TYPE ? [ selection.stringValue ]
-				: selection.resultType === XPathResult.BOOLEAN_TYPE ? [ selection.booleanValue ]
-					: [ ...drawn(selection) ];
+		return selection.resultType === XPathResult.NUMBER_TYPE ? [selection.numberValue]
+			: selection.resultType === XPathResult.STRING_TYPE ? [selection.stringValue]
+				: selection.resultType === XPathResult.BOOLEAN_TYPE ? [selection.booleanValue]
+					: [...drawn(selection)];
 
 	}
 
@@ -433,7 +433,7 @@ export function select(value: Target, path: string): readonly Target[] {
 	 * grow the stack with the size of the set, which a page places no bound on.
 	 */
 	function* drawn(selection: Result<Node>): Generator<Node> {
-		for ( let node = selection.iterateNext(); node !== null; node = selection.iterateNext() ) {
+		for (let node = selection.iterateNext(); node !== null; node = selection.iterateNext()) {
 			yield node;
 		}
 	}

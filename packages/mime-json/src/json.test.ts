@@ -172,7 +172,7 @@ describe("json", () => {
 
 	it("drops documents holding no text or no parsable value", async () => {
 
-		const documents: readonly string[] = [ " \n\t ", `{ "id": "1", `, `{ "id": "2", "label": "beta" }` ];
+		const documents: readonly string[] = [" \n\t ", `{ "id": "1", `, `{ "id": "2", "label": "beta" }`];
 
 		expect(await items(documents)(json<Item>())(toArray())).toEqual([
 			{ id: "2", label: "beta" }

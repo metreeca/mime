@@ -160,8 +160,8 @@ export function xpath(...nodes: readonly Target[]): XPath;
  */
 export function xpath(...args: readonly Target[] | readonly [mapper: (path: XPath) => unknown]): unknown {
 
-	return isMapper(args) ? map<AnyNode, unknown>(node => args[0](selector([ node ])))
-		: args.length === 0 ? map<AnyNode, XPath>(node => selector([ node ]))
+	return isMapper(args) ? map<AnyNode, unknown>(node => args[0](selector([node])))
+		: args.length === 0 ? map<AnyNode, XPath>(node => selector([node]))
 			: selector(args);
 
 

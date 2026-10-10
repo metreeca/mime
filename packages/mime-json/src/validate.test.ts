@@ -34,7 +34,7 @@ type Item = {
  * Rejects items stating an empty label, reporting the violation under the offending property.
  */
 function labelled(item: Item): Optional<Trace> {
-	return item.label ? undefined : [ { label: [ "expected a non-empty label" ] } ];
+	return item.label ? undefined : [{ label: ["expected a non-empty label"] }];
 }
 
 
@@ -85,7 +85,7 @@ describe("validate", () => {
 
 	it("propagates a validator failure", async () => {
 
-		const breaking = items<Item>([ { id: "1", label: "alpha" } ]);
+		const breaking = items<Item>([{ id: "1", label: "alpha" }]);
 
 		await expect(breaking(validate<Item>(() => {
 

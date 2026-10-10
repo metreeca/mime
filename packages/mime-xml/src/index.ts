@@ -17,8 +17,8 @@
 /**
  * XML and HTML processing tasks.
  *
- * Parses XML and HTML documents into a shared tree shape, selects nodes by XPath expression, extracts the main content
- * of web pages, renders it as Markdown, and reads selected values as the expected primitive types.
+ * Provides ready-made {@link https://github.com/metreeca/flow @metreeca/flow} tasks and helpers for processing XML and
+ * HTML content in pipelines run by the {@link https://github.com/metreeca/gear @metreeca/gear} executor.
  *
  * @module index
  *

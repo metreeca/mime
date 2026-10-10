@@ -17,8 +17,8 @@
 /**
  * JSON processing tasks.
  *
- * Parses JSON documents into values, selects nested values by path, filters values against validation constraints,
- * and narrows them to the expected primitive types.
+ * Provides ready-made {@link https://github.com/metreeca/flow @metreeca/flow} tasks and helpers for processing JSON
+ * content in pipelines run by the {@link https://github.com/metreeca/gear @metreeca/gear} executor.
  *
  * @module index
  *

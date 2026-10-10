@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2026 EC2U Alliance
+ * Copyright © 2026 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 /**
  * CSV processing tasks.
  *
- * Parses CSV documents into records, keyed by column label or by position.
+ * Provides ready-made {@link https://github.com/metreeca/flow @metreeca/flow} tasks for processing CSV content in
+ * pipelines run by the {@link https://github.com/metreeca/gear @metreeca/gear} executor.
  *
  * @module index
  *

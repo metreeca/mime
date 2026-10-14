@@ -56,7 +56,7 @@ export async function process(document: string | Response, base?: IRI): Promise<
 
 	async function read(response: Response): Promise<string> {
 
-		const [ type, parameters ] = parseItem(response.headers.get("Content-Type"));
+		const [type, parameters] = parseItem(response.headers.get("Content-Type"));
 		const charset = parameters.get("charset") || "UTF-8";
 
 		if ( type && !XMLType.test(type) ) {

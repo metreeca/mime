@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { readdir, readFile } from "node:fs/promises";
-import { basename, join } from "node:path";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
 import type { AnyNode, Document, Element } from "domhandler";
 import { isDocument, isTag } from "domhandler";
 import { DomUtils, parseDocument } from "htmlparser2";
+import { readdir, readFile } from "node:fs/promises";
+import { basename, join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { process } from "./focus.core.js";
 import { focus } from "./focus.js";
@@ -46,7 +46,7 @@ function markup(node: undefined | AnyNode): undefined | string {
 function extracted(document: undefined | Document): readonly Element[] {
 
 	const roots = document?.children.filter(isTag) ?? [];
-	const [ page ] = roots;
+	const [page] = roots;
 
 	return page?.name === "html"
 		? page.children.filter(isTag).filter(child => child.name === "body").flatMap(body =>
@@ -364,7 +364,7 @@ describe("process", () => {
 			const document = process(tree(`<main><p>alpha</p></main>`));
 
 			expect(document !== undefined && isDocument(document)).toBe(true);
-			expect(document?.children.map(node => isTag(node) && node.name)).toEqual([ "main" ]);
+			expect(document?.children.map(node => isTag(node) && node.name)).toEqual(["main"]);
 			expect(document?.children[0]?.parent).toBe(document);
 
 		});
@@ -433,7 +433,7 @@ describe("process", () => {
 			));
 
 			expect(extracted(document).map(region => region.attribs["xml:base"]))
-				.toEqual([ "https://example.com/docs/index.html", "https://example.com/docs/index.html" ]);
+				.toEqual(["https://example.com/docs/index.html", "https://example.com/docs/index.html"]);
 
 		});
 
@@ -507,7 +507,7 @@ describe("process", () => {
 		 * Parses the page the folder holds under a name.
 		 */
 		async function page(name: string): Promise<Document> {
-			return tree(await readFile(join(folder, `${ name }.html`), "utf-8"));
+			return tree(await readFile(join(folder, `${name}.html`), "utf-8"));
 		}
 
 		/**
@@ -518,51 +518,51 @@ describe("process", () => {
 
 			"agenda-coimbra-event": {
 				source: "https://agenda.coimbra.pt/event/ykclqzc9xdssmeu9",
-				regions: [ "div#main" ],
-				holds: [ "Núcleo da Guitarra e do Fado de Coimbra", "Torre de Anto" ],
-				drops: [ "Aviso Legal", "agendacoimbra@coimbra.pt" ]
+				regions: ["div#main"],
+				holds: ["Núcleo da Guitarra e do Fado de Coimbra", "Torre de Anto"],
+				drops: ["Aviso Legal", "agendacoimbra@coimbra.pt"]
 			},
 
 			"agenda-coimbra-exhibition": { // prose laid out as a flat run of paragraphs punctuated by line breaks
 				source: "https://agenda.coimbra.pt/event/8yu81jpbddstdk8o",
-				regions: [ "div#main" ],
-				holds: [ "Espelhos - Dentro e fora da realidade", "UC Exploratório", "26 Mar 2026" ],
-				drops: [ "Aviso Legal", "agendacoimbra@coimbra.pt" ]
+				regions: ["div#main"],
+				holds: ["Espelhos - Dentro e fora da realidade", "UC Exploratório", "26 Mar 2026"],
+				drops: ["Aviso Legal", "agendacoimbra@coimbra.pt"]
 			},
 
 			"guardian-vuelta-stage": {
 				source: "https://www.theguardian.com/sport/2026/sep/01/bastien-tronchon-claims-surprise-vuelta-stage-victory-in-thrilling-bunch-finish-cycling",
-				regions: [ "main" ],
-				holds: [ "Bastien Tronchon" ],
-				drops: [ "International edition" ]
+				regions: ["main"],
+				holds: ["Bastien Tronchon"],
+				drops: ["International edition"]
 			},
 
 			"matematica-unipv-home": {
 				source: "https://matematica.unipv.it/",
-				regions: [ "div#content" ],
-				holds: [ "Matematica a Pavia", "Eventi e appuntamenti" ],
-				drops: [ "Come raggiungerci", "Link utili" ]
+				regions: ["div#content"],
+				holds: ["Matematica a Pavia", "Eventi e appuntamenti"],
+				drops: ["Come raggiungerci", "Link utili"]
 			},
 
 			"phd-unipv-safd": {
 				source: "https://phd.unipv.it/la-scuola-di-alta-formazione-dottorale-di-pavia-safd/",
-				regions: [ "div.page-content-container" ],
-				holds: [ "Scuola di Alta Formazione Dottorale" ],
-				drops: [ "Webmail", "Accessibilità" ]
+				regions: ["div.page-content-container"],
+				holds: ["Scuola di Alta Formazione Dottorale"],
+				drops: ["Webmail", "Accessibilità"]
 			},
 
 			"portale-unipv-dipartimenti": {
 				source: "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti",
-				regions: [ "main#content" ],
-				holds: [ "Presso i Dipartimenti" ],
-				drops: [ "Futuro studente", "Webmail" ]
+				regions: ["main#content"],
+				holds: ["Presso i Dipartimenti"],
+				drops: ["Futuro studente", "Webmail"]
 			},
 
 			"unipv-news-summer-school": {
 				source: "https://www.unipv.news/eventi/7th-pavia-summer-school-indo-european-linguistics",
-				regions: [ "main#content" ],
-				holds: [ "Pavia Summer School" ],
-				drops: [ "Archivio newsletter" ]
+				regions: ["main#content"],
+				holds: ["Pavia Summer School"],
+				drops: ["Archivio newsletter"]
 			}
 
 		};
@@ -573,10 +573,10 @@ describe("process", () => {
 		function label(element: Element): string {
 
 			const id = element.attribs["id"];
-			const [ style ] = element.attribs["class"]?.trim().split(/\s+/) ?? [];
+			const [style] = element.attribs["class"]?.trim().split(/\s+/) ?? [];
 
-			return id !== undefined ? `${ element.name }#${ id }`
-				: style !== undefined ? `${ element.name }.${ style }`
+			return id !== undefined ? `${element.name}#${id}`
+				: style !== undefined ? `${element.name}.${style}`
 					: element.name;
 
 		}
@@ -590,7 +590,7 @@ describe("process", () => {
 
 		it("states an expectation for every page", async () => {
 
-			expect([ ...await collected() ].sort()).toEqual(Object.keys(samples).sort());
+			expect([...await collected()].sort()).toEqual(Object.keys(samples).sort());
 
 		});
 
@@ -629,16 +629,16 @@ describe("focus", () => {
 		];
 
 		expect((await items(trees)(focus())(toArray())).map(document => DomUtils.getOuterHTML(document)))
-			.toEqual([ "<main><p>beta</p></main>", "<main><p>gamma</p></main>" ]);
+			.toEqual(["<main><p>beta</p></main>", "<main><p>gamma</p></main>"]);
 
 	});
 
 	it("drops trees holding no content", async () => {
 
-		const trees: readonly AnyNode[] = [ tree(``), tree(`<main><p>alpha</p></main>`) ];
+		const trees: readonly AnyNode[] = [tree(``), tree(`<main><p>alpha</p></main>`)];
 
 		expect((await items(trees)(focus())(toArray())).map(document => DomUtils.getOuterHTML(document)))
-			.toEqual([ "<main><p>alpha</p></main>" ]);
+			.toEqual(["<main><p>alpha</p></main>"]);
 
 	});
 

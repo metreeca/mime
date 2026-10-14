@@ -409,7 +409,7 @@ describe("html", () => {
 
 	it("emits the tree of each document in turn", async () => {
 
-		const documents: readonly string[] = [ `<div id="1"></div>`, `<div id="2"></div>` ];
+		const documents: readonly string[] = [`<div id="1"></div>`, `<div id="2"></div>`];
 
 		expect((await items(documents)(html())(toArray())).map(document => outline(document))).toEqual([
 			[{ name: "div", attributes: { id: "1" }, children: [] }],
@@ -420,7 +420,7 @@ describe("html", () => {
 
 	it("drops documents holding no text", async () => {
 
-		const documents: readonly string[] = [ " \n\t ", `<div id="1"></div>` ];
+		const documents: readonly string[] = [" \n\t ", `<div id="1"></div>`];
 
 		expect((await items(documents)(html())(toArray())).map(document => outline(document))).toEqual([
 			[{ name: "div", attributes: { id: "1" }, children: [] }]
@@ -430,7 +430,7 @@ describe("html", () => {
 
 	it("records the stated base on every tree", async () => {
 
-		const documents: readonly string[] = [ `<div id="1"></div>`, `<div id="2"></div>` ];
+		const documents: readonly string[] = [`<div id="1"></div>`, `<div id="2"></div>`];
 
 		const trees = await items(documents)(html("https://example.com/a/b"))(toArray());
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2026 EC2U Alliance
+ * Copyright © 2026 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -418,7 +418,7 @@ describe("csv", () => {
 
 	it("reads each document on its own, header included", async () => {
 
-		const documents: readonly string[] = [ "id,label\n1,alpha\n", "label,id\nbeta,2\n" ];
+		const documents: readonly string[] = ["id,label\n1,alpha\n", "label,id\nbeta,2\n"];
 
 		expect(await collect(csv<Row>({ header: true })(items(documents)))).toEqual([
 			{ id: "1", label: "alpha" },

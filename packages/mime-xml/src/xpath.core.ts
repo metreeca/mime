@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
+// pull in the hand-written declarations, also for consumers compiling this source through the source condition
+
+/// <reference path="./xpathway.d.ts" />
+
 import type { AnyNode, ChildNode, Element, ParentNode } from "domhandler";
 import { hasChildren, isCDATA, isComment, isDirective, isDocument, isTag, isText } from "domhandler";
 import { type Adapter, createEvaluator, type Resolver, type Result, XPathResult } from "xpathway";
 
 
 /**
- * A value an expression is evaluated against or reports.
+ * A value an expression is evaluated against or returns.
  *
- * Covers the four value types XPath 1.0 defines: the nodes a parsed tree holds, the attributes a selection reaches, and
- * the strings, numbers and booleans an expression computes. Whatever a selection reports is thus the target of a
- * further selection in its turn, a computed value selecting nothing, as one holds no tree to select from.
+ * Covers the value types defined by XPath 1.0: tree nodes, attributes, and computed strings, numbers and booleans. Any
+ * selected value can be the target of a further selection; computed values have no tree, so selecting from them
+ * returns nothing.
  *
  * @see {@link https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Introduction XML Path Language (XPath) 1.0 -
  * Introduction}
@@ -39,14 +43,13 @@ type Node = AnyNode | Attribute;
 /**
  * An attribute of an element, as a node.
  *
- * Selected by an attribute step and usable as the target of a further selection, so that an attribute is addressed
- * exactly as an element is. The same attribute of the same element is always handed over as the same object, so that a
- * selection reaching it twice reports it once.
+ * Selected by attribute steps and usable as the target of further selections, like any element. The same attribute of
+ * the same element is always the same object, so it can be compared by identity and appears only once in a selection.
  */
 export type Attribute = {
 
 	/**
-	 * The name of the attribute, as the tree holds it, prefix included.
+	 * The name of the attribute, as stored in the tree, prefix included.
 	 */
 	readonly name: string;
 
@@ -181,7 +184,7 @@ function stated(node: AnyNode): readonly ChildNode[] {
 
 function projected(element: Element): readonly Attribute[] {
 	return kept(handles, element, stating => Object.entries(stating.attribs)
-		.map(([ name, value ]) => Object.freeze({ name, value, parent: stating }))
+		.map(([name, value]) => Object.freeze({ name, value, parent: stating }))
 	);
 }
 
@@ -227,7 +230,7 @@ function qualified(node: Node): string {
 }
 
 function local(name: string): string {
-	return name.slice(name.lastIndexOf(":") + 1);
+	return name.slice(name.lastIndexOf(":")+1);
 }
 
 function prefixed(name: string): undefined | string {
@@ -260,17 +263,17 @@ function order(x: Node, y: Node): number {
 
 
 	function chain(node: Node): readonly Node[] {
-		return node.parent === null ? [ node ] : [ ...chain(node.parent), node ];
+		return node.parent === null ? [node] : [...chain(node.parent), node];
 	}
 
 	function compare(xs: readonly Node[], ys: readonly Node[]): number {
 
-		const [ x, ...xt ] = xs;
-		const [ y, ...yt ] = ys;
+		const [x, ...xt] = xs;
+		const [y, ...yt] = ys;
 
-		return x === undefined || y === undefined ? xs.length - ys.length // one node holds the other
+		return x === undefined || y === undefined ? xs.length-ys.length // one node holds the other
 			: x === y ? compare(xt, yt)
-				: position(x) - position(y);
+				: position(x)-position(y);
 
 	}
 
@@ -282,7 +285,7 @@ function order(x: Node, y: Node): number {
 
 			const attributes = projected(node.parent);
 
-			return attributes.indexOf(node) - attributes.length;
+			return attributes.indexOf(node)-attributes.length;
 
 		} else if ( node.parent === null ) {
 
@@ -384,7 +387,7 @@ export function base(value: Target): undefined | URL {
 		const outer = node.parent === null ? [] : scoped(node.parent);
 		const stated = isElement(node) ? node.attribs[XMLBase] : undefined;
 
-		return stated === undefined ? outer : [ ...outer, stated ];
+		return stated === undefined ? outer : [...outer, stated];
 
 	}
 
@@ -419,10 +422,10 @@ export function select(value: Target, path: string): readonly Target[] {
 
 		const selection = evaluator.evaluate(path, value, resolver);
 
-		return selection.resultType === XPathResult.NUMBER_TYPE ? [ selection.numberValue ]
-			: selection.resultType === XPathResult.STRING_TYPE ? [ selection.stringValue ]
-				: selection.resultType === XPathResult.BOOLEAN_TYPE ? [ selection.booleanValue ]
-					: [ ...drawn(selection) ];
+		return selection.resultType === XPathResult.NUMBER_TYPE ? [selection.numberValue]
+			: selection.resultType === XPathResult.STRING_TYPE ? [selection.stringValue]
+				: selection.resultType === XPathResult.BOOLEAN_TYPE ? [selection.booleanValue]
+					: [...drawn(selection)];
 
 	}
 
@@ -434,7 +437,7 @@ export function select(value: Target, path: string): readonly Target[] {
 	 * grow the stack with the size of the set, which a page places no bound on.
 	 */
 	function* drawn(selection: Result<Node>): Generator<Node> {
-		for ( let node = selection.iterateNext(); node !== null; node = selection.iterateNext() ) {
+		for (let node = selection.iterateNext(); node !== null; node = selection.iterateNext()) {
 			yield node;
 		}
 	}

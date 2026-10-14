@@ -1,6 +1,6 @@
 {
   "name": "@metreeca/mime-xml",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "XML and HTML processing tasks for @metreeca/mime.",
   "keywords": [
     "typescript",

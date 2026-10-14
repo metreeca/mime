@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+// pull in the hand-written declarations, also for consumers compiling this source through the source condition
+
+/// <reference path="./xpathway.d.ts" />
+
 import type { AnyNode, ChildNode, Element, ParentNode } from "domhandler";
 import { hasChildren, isCDATA, isComment, isDirective, isDocument, isTag, isText } from "domhandler";
 import { type Adapter, createEvaluator, type Resolver, type Result, XPathResult } from "xpathway";

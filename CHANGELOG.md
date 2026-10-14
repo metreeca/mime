@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/metreeca/mime/compare/v0.1.0...HEAD)
 
+### Fixed
+
+- Ship the hand-written `xpathway` declarations with the `@metreeca/mime-xml` sources, so projects type-checking the
+  package from a linked checkout no longer report the parameters of its XPath callbacks as implicitly typed `any`
+
 ## [0.1.0](https://github.com/metreeca/mime/releases/tag/v0.1.0) - 2026-10-01
 
 Initial release of ready-made tasks for parsing content by media type, running under the

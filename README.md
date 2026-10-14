@@ -38,7 +38,7 @@ and run a job.
 | [@metreeca/mime]      | Content access contracts and shared services |
 | [@metreeca/mime-csv]  | CSV processing tasks                         |
 | [@metreeca/mime-json] | JSON processing tasks                        |
-| [@metreeca/mime-rdf]  | RDF processing tasks                            |
+| [@metreeca/mime-rdf]  | RDF processing tasks                         |
 | [@metreeca/mime-xml]  | XML and HTML processing tasks                |
 
 [@metreeca/mime]: https://metreeca.github.io/mime/modules/_metreeca_mime.html

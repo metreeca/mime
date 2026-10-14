@@ -94,11 +94,11 @@ export function process(node: AnyNode): Markdown {
 	const body = format({ text: "", space: false, level: 0, item: false }, node).text.trim();
 
 	const front = [
-		...(titled === undefined ? [] : [ `title: "${ escape(plain(titled)) }"` ]),
-		...(url === undefined ? [] : [ `url: "${ escape(url.href) }"` ])
+		...(titled === undefined ? [] : [`title: "${escape(plain(titled))}"`]),
+		...(url === undefined ? [] : [`url: "${escape(url.href)}"`])
 	];
 
-	return front.length === 0 ? body : `---\n${ front.join("\n") }\n---\n\n${ body }`.trim();
+	return front.length === 0 ? body : `---\n${front.join("\n")}\n---\n\n${body}`.trim();
 
 
 	function located(node: AnyNode): undefined | URL { // the base recorded by the root of the tree
@@ -232,7 +232,7 @@ export function process(node: AnyNode): Markdown {
 		}
 
 		function opening(text: string): boolean { // no space is written where a line has yet to take content
-			const last = text.charAt(text.length - 1);
+			const last = text.charAt(text.length-1);
 			return last === "" || last === "\n" || last === " ";
 		}
 
@@ -256,7 +256,7 @@ export function process(node: AnyNode): Markdown {
 
 		const { text } = buffer;
 
-		return { ...buffer, text: text.length > 2 && text.charAt(text.length - 2) !== "\n" ? `${text}\n` : text };
+		return { ...buffer, text: text.length > 2 && text.charAt(text.length-2) !== "\n" ? `${text}\n` : text };
 
 	}
 
@@ -284,7 +284,7 @@ export function process(node: AnyNode): Markdown {
 
 		// the outermost list opens a block of its own
 
-		const opened = { ...(level === 0 ? feed(buffer) : buffer), level: level + 1 };
+		const opened = { ...(level === 0 ? feed(buffer) : buffer), level: level+1 };
 
 		return { ...feed(content(opened)), level };
 
@@ -294,7 +294,7 @@ export function process(node: AnyNode): Markdown {
 
 		const { text, level } = buffer;
 
-		return buffer.item ? buffer : { ...buffer, text: `${text}${Indent.repeat(Math.max(level - 1, 0))}` };
+		return buffer.item ? buffer : { ...buffer, text: `${text}${Indent.repeat(Math.max(level-1, 0))}` };
 
 	}
 

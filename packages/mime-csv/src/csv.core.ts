@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2026 EC2U Alliance
+ * Copyright © 2026 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ export async function* process<R extends Record = Record>(document: string | Res
 
 	function read(response: Response): Readable {
 
-		const [ type, parameters ] = parseItem(response.headers.get("Content-Type"));
+		const [type, parameters] = parseItem(response.headers.get("Content-Type"));
 		const charset = parameters.get("charset") || "UTF-8";
 
 		if ( type && !CSVType.test(type) ) {

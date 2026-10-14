@@ -53,7 +53,7 @@ function sole(nodes: readonly Target[]): Target {
 
 	expect(nodes).toHaveLength(1);
 
-	const [ node ] = nodes;
+	const [node] = nodes;
 
 	if ( node === undefined ) {
 		throw new Error("no node selected");
@@ -87,21 +87,21 @@ describe("xpath", () => {
 
 		it("emits a selector targeting each tree in turn", async () => {
 
-			const trees: readonly AnyNode[] = [ tree(`<item id="1"/>`), tree(`<item id="2"/>`) ];
+			const trees: readonly AnyNode[] = [tree(`<item id="1"/>`), tree(`<item id="2"/>`)];
 
 			const paths = await items<AnyNode>(trees)(xpath())(toArray());
 
-			expect(paths.map(path => outline(path("//item/@id")))).toEqual([ [ "@id=1" ], [ "@id=2" ] ]);
+			expect(paths.map(path => outline(path("//item/@id")))).toEqual([["@id=1"], ["@id=2"]]);
 
 		});
 
 		it("selects nothing if the expression addresses no node", async () => {
 
-			const trees: readonly AnyNode[] = [ tree(`<item id="1"/>`) ];
+			const trees: readonly AnyNode[] = [tree(`<item id="1"/>`)];
 
 			const paths = await items<AnyNode>(trees)(xpath())(toArray());
 
-			expect(paths.map(path => path("//tag"))).toEqual([ [] ]);
+			expect(paths.map(path => path("//tag"))).toEqual([[]]);
 
 		});
 
@@ -124,15 +124,15 @@ describe("xpath", () => {
 			})))(toArray());
 
 			expect(results).toEqual([
-				{ id: [ "@id=1" ], tags: [ "<tag>", "<tag>" ] },
-				{ id: [ "@id=2" ], tags: [] }
+				{ id: ["@id=1"], tags: ["<tag>", "<tag>"] },
+				{ id: ["@id=2"], tags: [] }
 			]);
 
 		});
 
 		it("reports a malformed expression while the feed is consumed", async () => {
 
-			const results = items<AnyNode>([ tree(`<item/>`) ])(xpath(path => path("item[")))(toArray());
+			const results = items<AnyNode>([tree(`<item/>`)])(xpath(path => path("item[")))(toArray());
 
 			await expect(results).rejects.toThrow(SyntaxError);
 
@@ -147,7 +147,7 @@ describe("xpath", () => {
 			const first = tree(`<item id="1"/>`);
 			const second = tree(`<item id="2"/>`);
 
-			expect(outline(xpath(first, second)("//item/@id"))).toEqual([ "@id=1", "@id=2" ]);
+			expect(outline(xpath(first, second)("//item/@id"))).toEqual(["@id=1", "@id=2"]);
 
 		});
 
@@ -161,13 +161,13 @@ describe("xpath", () => {
 
 			const path = xpath(tree(`<catalog><item><tag>a</tag></item></catalog>`));
 
-			expect(outline(xpath(...path("//item"))("tag"))).toEqual([ "<tag>" ]);
+			expect(outline(xpath(...path("//item"))("tag"))).toEqual(["<tag>"]);
 
 		});
 
 		it("reports the values an expression computes", () => {
 
-			expect(xpath(tree(`<catalog><item/><item/></catalog>`))("count(//item)")).toEqual([ 2 ]);
+			expect(xpath(tree(`<catalog><item/><item/></catalog>`))("count(//item)")).toEqual([2]);
 
 		});
 
@@ -196,7 +196,7 @@ describe("select", () => {
 
 			const document = tree(`<item/>`);
 
-			expect(outline(select(document, "."))).toEqual([ "#document" ]);
+			expect(outline(select(document, "."))).toEqual(["#document"]);
 
 		});
 
@@ -204,7 +204,7 @@ describe("select", () => {
 
 			const item = only(select(tree(`<catalog><item><tag/></item></catalog>`), "//item"));
 
-			expect(outline(select(item, "tag"))).toEqual([ "<tag>" ]);
+			expect(outline(select(item, "tag"))).toEqual(["<tag>"]);
 
 		});
 
@@ -212,7 +212,7 @@ describe("select", () => {
 
 			const item = only(select(tree(`<catalog><item/></catalog>`), "//item"));
 
-			expect(outline(select(item, "/*"))).toEqual([ "<catalog>" ]);
+			expect(outline(select(item, "/*"))).toEqual(["<catalog>"]);
 
 		});
 
@@ -224,7 +224,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><item/><item/><other/></catalog>`);
 
-			expect(outline(select(document, "catalog/item"))).toEqual([ "<item>", "<item>" ]);
+			expect(outline(select(document, "catalog/item"))).toEqual(["<item>", "<item>"]);
 
 		});
 
@@ -232,7 +232,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><group><item/></group><item/></catalog>`);
 
-			expect(outline(select(document, "//item"))).toEqual([ "<item>", "<item>" ]);
+			expect(outline(select(document, "//item"))).toEqual(["<item>", "<item>"]);
 
 		});
 
@@ -240,7 +240,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><item/><other/></catalog>`);
 
-			expect(outline(select(document, "catalog/*"))).toEqual([ "<item>", "<other>" ]);
+			expect(outline(select(document, "catalog/*"))).toEqual(["<item>", "<other>"]);
 
 		});
 
@@ -260,7 +260,7 @@ describe("select", () => {
 
 			const document = tree(`<item id="1" href="a"/>`);
 
-			expect(outline(select(document, "//item/@id"))).toEqual([ "@id=1" ]);
+			expect(outline(select(document, "//item/@id"))).toEqual(["@id=1"]);
 
 		});
 
@@ -268,7 +268,7 @@ describe("select", () => {
 
 			const document = tree(`<item id="1" href="a"/>`);
 
-			expect(outline(select(document, "//item/@*"))).toEqual([ "@id=1", "@href=a" ]);
+			expect(outline(select(document, "//item/@*"))).toEqual(["@id=1", "@href=a"]);
 
 		});
 
@@ -284,7 +284,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><item id="1"/></catalog>`);
 
-			expect(outline(select(document, "//@id/.."))).toEqual([ "<item>" ]);
+			expect(outline(select(document, "//@id/.."))).toEqual(["<item>"]);
 
 		});
 
@@ -300,7 +300,7 @@ describe("select", () => {
 
 			const document = tree(`<item id="1"/>`);
 
-			expect(outline(select(document, "//@id | //item/@id"))).toEqual([ "@id=1" ]);
+			expect(outline(select(document, "//@id | //item/@id"))).toEqual(["@id=1"]);
 
 		});
 
@@ -312,7 +312,7 @@ describe("select", () => {
 
 			const document = tree(`<item>alpha<tag/>beta</item>`);
 
-			expect(outline(select(document, "//item/text()"))).toEqual([ `"alpha"`, `"beta"` ]);
+			expect(outline(select(document, "//item/text()"))).toEqual([`"alpha"`, `"beta"`]);
 
 		});
 
@@ -320,7 +320,7 @@ describe("select", () => {
 
 			const document = tree(`<item><![CDATA[a<b]]></item>`);
 
-			expect(outline(select(document, "//item/text()"))).toEqual([ `"a<b"` ]);
+			expect(outline(select(document, "//item/text()"))).toEqual([`"a<b"`]);
 
 		});
 
@@ -328,7 +328,7 @@ describe("select", () => {
 
 			const document = tree(`<item>alpha<tag>beta</tag></item>`);
 
-			expect(outline(select(document, "//item[.='alphabeta']"))).toEqual([ "<item>" ]);
+			expect(outline(select(document, "//item[.='alphabeta']"))).toEqual(["<item>"]);
 
 		});
 
@@ -336,7 +336,7 @@ describe("select", () => {
 
 			const document = tree(`<item>alpha<!-- note --></item>`);
 
-			expect(outline(select(document, "//item[.='alpha']"))).toEqual([ "<item>" ]);
+			expect(outline(select(document, "//item[.='alpha']"))).toEqual(["<item>"]);
 
 		});
 
@@ -344,7 +344,7 @@ describe("select", () => {
 
 			const document = tree(`<item><!-- note --></item>`);
 
-			expect(outline(select(document, "//comment()"))).toEqual([ "<!-- note -->" ]);
+			expect(outline(select(document, "//comment()"))).toEqual(["<!-- note -->"]);
 
 		});
 
@@ -360,7 +360,7 @@ describe("select", () => {
 
 			const document = tree(`<item><?go now?><tag/></item>`);
 
-			expect(outline(select(document, "//item/node()"))).toEqual([ "<tag>" ]);
+			expect(outline(select(document, "//item/node()"))).toEqual(["<tag>"]);
 
 		});
 
@@ -372,7 +372,7 @@ describe("select", () => {
 
 			const document = tree(`<Item/>`);
 
-			expect(outline(select(document, "//Item"))).toEqual([ "<Item>" ]);
+			expect(outline(select(document, "//Item"))).toEqual(["<Item>"]);
 			expect(select(document, "//item")).toEqual([]);
 
 		});
@@ -381,7 +381,7 @@ describe("select", () => {
 
 			const document = tree(`<d:b xmlns:d="https://example.net/"/>`);
 
-			expect(outline(select(document, "//d:b"))).toEqual([ "<d:b>" ]);
+			expect(outline(select(document, "//d:b"))).toEqual(["<d:b>"]);
 			expect(select(document, "//e:b")).toEqual([]);
 
 		});
@@ -398,7 +398,7 @@ describe("select", () => {
 
 			const document = tree(`<d:b xmlns:d="https://example.net/"/>`);
 
-			expect(outline(select(document, "//*[name()='d:b']"))).toEqual([ "<d:b>" ]);
+			expect(outline(select(document, "//*[name()='d:b']"))).toEqual(["<d:b>"]);
 
 		});
 
@@ -406,7 +406,7 @@ describe("select", () => {
 
 			const document = tree(`<d:b xmlns:d="https://example.net/"/>`);
 
-			expect(outline(select(document, "//*[local-name()='b']"))).toEqual([ "<d:b>" ]);
+			expect(outline(select(document, "//*[local-name()='b']"))).toEqual(["<d:b>"]);
 
 		});
 
@@ -414,7 +414,7 @@ describe("select", () => {
 
 			const document = tree(`<d:b xmlns:d="https://example.net/"/>`);
 
-			expect(outline(select(document, "//*[namespace-uri()='d']"))).toEqual([ "<d:b>" ]);
+			expect(outline(select(document, "//*[namespace-uri()='d']"))).toEqual(["<d:b>"]);
 
 		});
 
@@ -422,8 +422,8 @@ describe("select", () => {
 
 			const document = tree(`<item xml:base="https://example.net/" xml:lang="en"/>`);
 
-			expect(outline(select(document, "//item/@xml:base"))).toEqual([ "@xml:base=https://example.net/" ]);
-			expect(outline(select(document, "//item[lang('en')]"))).toEqual([ "<item>" ]);
+			expect(outline(select(document, "//item/@xml:base"))).toEqual(["@xml:base=https://example.net/"]);
+			expect(outline(select(document, "//item[lang('en')]"))).toEqual(["<item>"]);
 
 		});
 
@@ -431,7 +431,7 @@ describe("select", () => {
 
 			const document = tree(`<item xmlns="https://example.net/"/>`);
 
-			expect(outline(select(document, "//item"))).toEqual([ "<item>" ]);
+			expect(outline(select(document, "//item"))).toEqual(["<item>"]);
 
 		});
 
@@ -439,7 +439,7 @@ describe("select", () => {
 
 			const document = tree(`<item xmlns:d="https://example.net/"/>`);
 
-			expect(outline(select(document, "//item/@*"))).toEqual([ "@xmlns:d=https://example.net/" ]);
+			expect(outline(select(document, "//item/@*"))).toEqual(["@xmlns:d=https://example.net/"]);
 
 		});
 
@@ -463,7 +463,7 @@ describe("select", () => {
 				throw new Error("no tree parsed");
 			}
 
-			expect(outline(select(page, "//a/@href"))).toEqual([ "@href=a" ]);
+			expect(outline(select(page, "//a/@href"))).toEqual(["@href=a"]);
 
 		});
 
@@ -475,7 +475,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><item id="1"/><item id="2"/></catalog>`);
 
-			expect(outline(select(document, "//item[@id='2']/@id"))).toEqual([ "@id=2" ]);
+			expect(outline(select(document, "//item[@id='2']/@id"))).toEqual(["@id=2"]);
 
 		});
 
@@ -483,7 +483,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><item id="1"/><item id="2"/></catalog>`);
 
-			expect(outline(select(document, "//item[position()=2]/@id"))).toEqual([ "@id=2" ]);
+			expect(outline(select(document, "//item[position()=2]/@id"))).toEqual(["@id=2"]);
 
 		});
 
@@ -491,7 +491,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><group><item/><item/></group><group><item/></group></catalog>`);
 
-			expect(outline(select(document, "//group[count(item)=2]/item"))).toEqual([ "<item>", "<item>" ]);
+			expect(outline(select(document, "//group[count(item)=2]/item"))).toEqual(["<item>", "<item>"]);
 
 		});
 
@@ -499,7 +499,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><item id="1"/><item id="2"/></catalog>`);
 
-			expect(outline(select(document, "id('2')/@id"))).toEqual([ "@id=2" ]);
+			expect(outline(select(document, "id('2')/@id"))).toEqual(["@id=2"]);
 
 		});
 
@@ -509,7 +509,7 @@ describe("select", () => {
 
 			expect(outline(select(document,
 				"//item[translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='alpha']"
-			))).toEqual([ "<item>" ]);
+			))).toEqual(["<item>"]);
 
 		});
 
@@ -521,7 +521,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><item id="1"/><item id="2"/></catalog>`);
 
-			expect(outline(select(document, "//item[2]/@id | //item[1]/@id"))).toEqual([ "@id=1", "@id=2" ]);
+			expect(outline(select(document, "//item[2]/@id | //item[1]/@id"))).toEqual(["@id=1", "@id=2"]);
 
 		});
 
@@ -529,7 +529,7 @@ describe("select", () => {
 
 			const document = tree(`<item id="1"><tag/></item>`);
 
-			expect(outline(select(document, "//tag | //@id"))).toEqual([ "@id=1", "<tag>" ]);
+			expect(outline(select(document, "//tag | //@id"))).toEqual(["@id=1", "<tag>"]);
 
 		});
 
@@ -537,7 +537,7 @@ describe("select", () => {
 
 			const document = tree(`<catalog><item/></catalog>`);
 
-			expect(outline(select(document, "//item | //catalog/item"))).toEqual([ "<item>" ]);
+			expect(outline(select(document, "//item | //catalog/item"))).toEqual(["<item>"]);
 
 		});
 
@@ -546,7 +546,7 @@ describe("select", () => {
 			const document = tree(`<catalog><group><item/></group><item/></catalog>`);
 
 			expect(outline(select(document, "//item[2] | //group | //item[1]")))
-				.toEqual([ "<group>", "<item>", "<item>" ]);
+				.toEqual(["<group>", "<item>", "<item>"]);
 
 		});
 
@@ -556,23 +556,23 @@ describe("select", () => {
 
 		it("reports the number an expression computes", async () => {
 
-			expect(select(tree(`<catalog><item/><item/></catalog>`), "count(//item)")).toEqual([ 2 ]);
+			expect(select(tree(`<catalog><item/><item/></catalog>`), "count(//item)")).toEqual([2]);
 
 		});
 
 		it("reports the string an expression computes", async () => {
 
-			expect(select(tree(`<item>alpha</item>`), "string(//item)")).toEqual([ "alpha" ]);
+			expect(select(tree(`<item>alpha</item>`), "string(//item)")).toEqual(["alpha"]);
 
 		});
 
 		it("reports the boolean an expression computes", async () => {
 
-			expect(select(tree(`<catalog><item/></catalog>`), "count(//item)=1")).toEqual([ true ]);
+			expect(select(tree(`<catalog><item/></catalog>`), "count(//item)=1")).toEqual([true]);
 
 		});
 
-		it.each([ 2, "alpha", true ])("selects nothing from a computed value <%s>", async value => {
+		it.each([2, "alpha", true])("selects nothing from a computed value <%s>", async value => {
 
 			expect(select(value, "//item")).toEqual([]);
 
@@ -595,7 +595,7 @@ describe("select", () => {
 			const document = tree(`<item/>`);
 
 			expect(() => select(document, "item[")).toThrow(SyntaxError);
-			expect(outline(select(document, "//item"))).toEqual([ "<item>" ]);
+			expect(outline(select(document, "//item"))).toEqual(["<item>"]);
 
 		});
 

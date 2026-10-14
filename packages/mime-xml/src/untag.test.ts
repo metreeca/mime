@@ -464,8 +464,8 @@ describe("process", () => {
 
 			function page(caption: string): string {
 				return `<main><h1>Alpha</h1><p>beta</p>`
-					+ `<form><ul><li><label>${ caption }</label><div><input name="input_14"></div>`
-					+ `<div>Ce champ n'est utilisé qu'à des fins de validation.</div></li></ul></form></main>`;
+					+`<form><ul><li><label>${caption}</label><div><input name="input_14"></div>`
+					+`<div>Ce champ n'est utilisé qu'à des fins de validation.</div></li></ul></form></main>`;
 			}
 
 			expect(process(tree(page("Name")))).toBe("# Alpha\n\nbeta");
@@ -571,7 +571,7 @@ describe("process", () => {
 
 		it("states the base URL recorded by the element a rendering is rooted at", async () => {
 
-			const [ element ] = tree(`<main xml:base="https://example.com/a/b"><p>alpha</p></main>`).children.filter(isTag);
+			const [element] = tree(`<main xml:base="https://example.com/a/b"><p>alpha</p></main>`).children.filter(isTag);
 
 			expect(process(element))
 				.toBe(`---\nurl: "https://example.com/a/b"\n---\n\nalpha`);
@@ -609,7 +609,7 @@ describe("process", () => {
 
 		it("converts the subtree rooted at an element", async () => {
 
-			const [ element ] = tree(`<div><p>alpha</p></div><p>beta</p>`).children.filter(isTag);
+			const [element] = tree(`<div><p>alpha</p></div><p>beta</p>`).children.filter(isTag);
 
 			expect(process(element)).toBe("alpha");
 
@@ -636,17 +636,17 @@ describe("untag", () => {
 
 	it("emits the rendering of each tree in turn", async () => {
 
-		const trees: readonly AnyNode[] = [ tree(`<p>alpha</p>`), tree(`<p>beta</p>`) ];
+		const trees: readonly AnyNode[] = [tree(`<p>alpha</p>`), tree(`<p>beta</p>`)];
 
-		expect(await items(trees)(untag())(toArray())).toEqual([ "alpha", "beta" ]);
+		expect(await items(trees)(untag())(toArray())).toEqual(["alpha", "beta"]);
 
 	});
 
 	it("emits an empty rendering for a tree holding no content", async () => {
 
-		const trees: readonly AnyNode[] = [ tree(``), tree(`<p>alpha</p>`) ];
+		const trees: readonly AnyNode[] = [tree(``), tree(`<p>alpha</p>`)];
 
-		expect(await items(trees)(untag())(toArray())).toEqual([ "", "alpha" ]);
+		expect(await items(trees)(untag())(toArray())).toEqual(["", "alpha"]);
 
 	});
 

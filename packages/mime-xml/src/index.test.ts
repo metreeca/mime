@@ -29,7 +29,7 @@ function node(text: string, path: string): Target {
 
 	expect(nodes).toHaveLength(1);
 
-	const [ node ] = nodes;
+	const [node] = nodes;
 
 	if ( node === undefined ) {
 		throw new Error("no node selected");
@@ -58,7 +58,7 @@ describe("boolean", () => {
 
 	});
 
-	it.each([ "yes", "1", "0", "" ])("reports text naming no boolean <%s>", async text => {
+	it.each(["yes", "1", "0", ""])("reports text naming no boolean <%s>", async text => {
 
 		expect(() => boolean(node(`<item>${text}</item>`, "//item"))).toThrow(TypeError);
 
@@ -176,4 +176,3 @@ describe("link", () => {
 	});
 
 });
-

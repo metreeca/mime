@@ -47,7 +47,7 @@ export function select(value: Value, path: string): readonly Value[] {
 
 		// the scan stops at the first unmatched position, leaving the tail of the path uncovered
 
-		const scanned = steps.reduce((length, step) => length + step[0].length, 0);
+		const scanned = steps.reduce((length, step) => length+step[0].length, 0);
 
 		if ( scanned !== path.length ) {
 			throw new SyntaxError(`malformed path <${path}>`);

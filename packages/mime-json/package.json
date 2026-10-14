@@ -1,6 +1,6 @@
 {
   "name": "@metreeca/mime-json",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JSON processing tasks for @metreeca/mime.",
   "keywords": [
     "typescript",
@@ -42,15 +42,15 @@
     "node": ">=22.22.0"
   },
   "scripts": {
-    "clean": "rm -rf dist docs node_modules",
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "clean": "rm dist docs node_modules",
+    "build": "rm dist && tsc -p tsconfig.build.json",
     "check": "npx vitest --typecheck run"
   },
   "dependencies": {
-    "@metreeca/core": "^0.10.0",
-    "@metreeca/flow": "^0.10.0",
-    "@metreeca/http": "^0.2.0",
-    "@metreeca/tape": "^0.10.1"
+    "@metreeca/core": "^0.12.1",
+    "@metreeca/flow": "^0.11.1",
+    "@metreeca/http": "^0.4.1",
+    "@metreeca/tape": "^0.11.1"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",

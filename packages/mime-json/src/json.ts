@@ -25,39 +25,38 @@ import { process } from "./json.core.js";
 /**
  * Creates a JSON parser.
  *
- * The generated task converts a feed of JSON documents into a feed of values, one value per document, so that a
- * consumer works on structured data rather than on text.
+ * The task converts a feed of JSON documents into a feed of values, one value per document, so that downstream tasks
+ * work on structured data rather than on text.
  *
- * A document is given either as text or as a response carrying it as its body, and is parsed on its own. A document
- * holding no text, or only whitespace, contributes no value, as does a response carrying no body.
+ * Each document is given either as text or as a response carrying it in its body. Empty or whitespace-only documents
+ * produce no value, and neither do responses without a body.
  *
- * Response bodies are decoded as UTF-8, the only encoding JSON is exchanged under, and bytes that are not valid UTF-8
- * are read as replacement characters.
+ * Response bodies are always decoded as UTF-8, the only encoding JSON is exchanged in. Invalid UTF-8 bytes are read as
+ * replacement characters.
  *
- * A response stating a content type that is not a JSON one, `application/json` or a `+json` format such as
- * `application/ld+json`, or a charset other than UTF-8, is reported to the log and read all the same, so that a
- * mis-declared source is diagnosed without being shut out.
+ * A response is logged as a warning, and parsed anyway, if its content type is not a JSON one or its charset is not
+ * UTF-8. JSON content types are `application/json` and `+json` formats such as `application/ld+json`.
  *
  * > [!NOTE]
  * >
- * > - **Incremental**: each value is emitted as soon as its document is drawn, so the feed produced runs dry as the
- * >   feed drawn from does and an endless source is read as long as it is consumed.
- * > - **Materialising**: a document is held in memory while it is parsed, as parsing requires it as a single
- * >   contiguous string, so peak memory use is about twice the size of the largest document rather than of the feed.
- * > - **Stateless**: every document is parsed on its own, so the outcome is unaffected by how the feed is split
+ * > - **Incremental**: each value is emitted as soon as its document is parsed, so endless sources are processed for
+ * >   as long as the feed is consumed.
+ * > - **Materialising**: each document is held in memory as a whole while it is parsed, so peak memory use is about
+ * >   twice the size of the largest document, regardless of the length of the feed.
+ * > - **Stateless**: each document is parsed independently, so the result doesn't depend on how the feed is split
  * >   across nested feeds or runs.
  *
  * > [!WARNING]
  * >
- * > A document that cannot be parsed is skipped and reported to the log, leaving the feed to run to completion.
+ * > Malformed documents are skipped and logged as warnings, and the feed runs to completion.
  *
- * @typeParam V The type of the value produced; the parsed document is emitted as is, without being validated
- *              against it; defaults to a JSON {@link Object}
+ * @typeParam V The type of the values produced; parsed documents are emitted as is and are not validated against it;
+ *              defaults to a JSON {@link Object}
  *
  * @returns A task converting a feed of JSON documents, given as text or as responses, into a feed of values
  *
- * @throws {@link !Error Error} While the feed is consumed, whatever the source reports while producing documents, or
- *                              whatever reading the body of a response reports
+ * @throws {@link !Error Error} While the feed is consumed, if the source feed fails or a response body can't be
+ *                              read
  *
  * @see {@link https://www.rfc-editor.org/rfc/rfc8259 RFC 8259 JSON Data Interchange Format}
  * @see {@link https://www.rfc-editor.org/rfc/rfc9110#section-8.3 RFC 9110 § 8.3 - Content-Type}

@@ -28,32 +28,31 @@ const logger = log(import.meta.url);
 /**
  * Creates a value validation task.
  *
- * The generated task retains the values a validator accepts and drops the ones it reports violations for, so that a
- * consumer works on values already known to meet the constraints it expects.
+ * The task keeps the values a validator accepts and drops the ones it rejects, so that downstream tasks work only on
+ * values known to meet the expected constraints.
  *
  * > [!NOTE]
  * >
- * > - **Incremental**: each retained value is emitted as soon as it is drawn, so the feed produced runs dry as the feed
- * >   drawn from does and an endless source is read as long as it is consumed.
- * > - **Streaming**: values are validated one at a time and none held, so the length of the feed weighs on memory no
- * >   more than a single value does.
- * > - **Stateless**: every value is validated on its own, so the outcome is unaffected by how the feed is split across
- * >   nested feeds or runs.
+ * > - **Incremental**: each accepted value is emitted as soon as it is drawn, so endless sources are processed for as
+ * >   long as the feed is consumed.
+ * > - **Streaming**: values are validated one at a time and none is retained, so memory use doesn't grow with the
+ * >   length of the feed.
+ * > - **Stateless**: each value is validated independently, so the result doesn't depend on how the feed is split
+ * >   across nested feeds or runs.
  *
  * > [!WARNING]
  * >
- * > A rejected value is dropped and reported to the log together with the trace listing every violation it incurs,
- * > leaving the feed to run to completion.
+ * > Rejected values are dropped and logged as warnings, together with the trace of their violations, and the feed runs
+ * > to completion.
  *
  * @typeParam V The type of the validated values
  *
- * @param validator The validator applied to each value, reporting the trace of the violations the value incurs, or
- *                  nothing if it meets every constraint
+ * @param validator The validator applied to each value, reporting the trace of the violations it finds, or nothing if
+ *                  the value meets every constraint
  *
- * @returns A task retaining the values `validator` accepts
+ * @returns A task keeping the values accepted by `validator`
  *
- * @throws {@link !Error Error} While the feed is consumed, whatever the source reports while producing values, or
- *                             whatever `validator` reports while validating one
+ * @throws {@link !Error Error} While the feed is consumed, if the source feed fails or `validator` throws
  *
  * @group Factories
  */

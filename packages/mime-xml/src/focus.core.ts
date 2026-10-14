@@ -112,11 +112,11 @@ export function process(node: AnyNode): undefined | Document {
 		const element = first(element => name(element) === "main")
 			?? first(element => element.attribs["role"]?.toLowerCase() === "main");
 
-		return element === undefined ? undefined : [ element ];
+		return element === undefined ? undefined : [element];
 
 
 		function first(test: (element: Element) => boolean): undefined | Element {
-			return DomUtils.findOne(test, [ ...nodes ], true) ?? undefined; // searched as stated, in document order
+			return DomUtils.findOne(test, [...nodes], true) ?? undefined; // searched as stated, in document order
 		}
 
 	}
@@ -140,7 +140,7 @@ export function process(node: AnyNode): undefined | Document {
 
 
 		function outermost(nodes: readonly AnyNode[]): readonly Element[] {
-			return nodes.filter(isTag).flatMap(element => name(element) === "article" ? [ element ] // holds its own
+			return nodes.filter(isTag).flatMap(element => name(element) === "article" ? [element] // holds its own
 				: Ignored.has(name(element)) ? [] // framing lists articles a reader is not after
 					: outermost(element.children)
 			);
@@ -153,7 +153,7 @@ export function process(node: AnyNode): undefined | Document {
 
 		const { densest } = scan(nodes);
 
-		return densest === undefined ? undefined : [ densest ];
+		return densest === undefined ? undefined : [densest];
 
 	}
 
@@ -186,7 +186,7 @@ export function process(node: AnyNode): undefined | Document {
 				xchars: total.xchars+item.xchars,
 				echars: total.echars+item.echars,
 
-				densest: item.density > total.density ? item.densest : total.densest, // the first of equals is the outermost
+				densest: item.density > total.density ? item.densest : total.densest, // ties keep the outermost
 				density: Math.max(total.density, item.density)
 
 			}), Empty);
@@ -220,7 +220,7 @@ export function process(node: AnyNode): undefined | Document {
 				const { xchars, echars, densest, density } = fold(weighed.map(({ scanned }) => scanned));
 
 				const children = weighed.flatMap(({ node, scanned }) => // framing tells a container apart from content
-					isTag(node) && (scanned.xchars > 0 || Ignored.has(name(node))) ? [ node ] : []
+					isTag(node) && (scanned.xchars > 0 || Ignored.has(name(node))) ? [node] : []
 				);
 
 				const diluting = children.length;
@@ -255,7 +255,7 @@ export function process(node: AnyNode): undefined | Document {
 	 */
 	function framed(nodes: readonly AnyNode[]): boolean {
 		return DomUtils.findOne(element => name(element) === "html" || name(element) === "body",
-			[ ...nodes ], true
+			[...nodes], true
 		) !== null;
 	}
 
@@ -276,8 +276,8 @@ export function process(node: AnyNode): undefined | Document {
 	function extract(regions: readonly Element[], frame: boolean, title: undefined | Element): Document {
 
 		const roots = regions.map(rebased);
-		const children = frame || title !== undefined ? [ paged(title, roots) ] : roots;
-		const document = new Document([ ...children ]);
+		const children = frame || title !== undefined ? [paged(title, roots)] : roots;
+		const document = new Document([...children]);
 
 		children.forEach(root => { root.parent = document; }); // a document owns the roots it is handed over rooted at
 
@@ -301,7 +301,7 @@ export function process(node: AnyNode): undefined | Document {
 			const target = located(node);
 
 			return holding("html", [
-				...(title === undefined ? [] : [ holding("head", [ cloneNode(title, true) ]) ]),
+				...(title === undefined ? [] : [holding("head", [cloneNode(title, true)])]),
 				holding("body", roots)
 			], target === undefined ? {} : { "xml:base": target });
 
@@ -331,7 +331,7 @@ export function process(node: AnyNode): undefined | Document {
 		 */
 		function holding(name: string, children: readonly Element[], attribs: Record<string, string> = {}): Element {
 
-			const element = new Element(name, { ...attribs }, [ ...children ]);
+			const element = new Element(name, { ...attribs }, [...children]);
 
 			children.forEach(child => { child.parent = element; }); // an element owns the nodes it is handed over
 
@@ -380,7 +380,7 @@ export function process(node: AnyNode): undefined | Document {
 
 				const href = element.attribs["xml:base"];
 
-				return href === undefined ? inherited : [ ...inherited, href ];
+				return href === undefined ? inherited : [...inherited, href];
 
 			}
 

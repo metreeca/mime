@@ -23,8 +23,8 @@ reimplementing them, and keep the service contracts compatible with the ones `@m
 - [@metreeca/core](https://github.com/metreeca/core) - Core utilities and shared types
 - [@metreeca/flow](https://github.com/metreeca/flow) - Composable async iterable processing
 - [@metreeca/tape](https://github.com/metreeca/tape) - Simplified facade for the LogTape logging framework
-- [@metreeca/gear](https://github.com/metreeca/gear) - Ready-made tasks and shared services for ETL jobs, supplying the
-  job executor and service locator this repository builds on
+- [@metreeca/gear](https://github.com/metreeca/gear) - Job executor and shared services for data pipelines, which this
+	repository builds on
 
 # NPM Scripts
 
@@ -46,8 +46,8 @@ The root `package.json` `workspaces` glob (`packages/*`) covers the framework pa
 immediately under `packages/` (for example `packages/mime`).
 
 Task packages are self-contained leaves named after the media type they handle, not after the library they parse it
-with: `mime-xml`, not `mime-htmlparser`. Each pulls in the core package transitively and only the libraries its own
-media type needs.
+with: `mime-xml`, not `mime-htmlparser`. Each pulls in only the libraries its own media type needs, declaring no
+dependency it doesn't import.
 
 `mime-url` covers retrieval, the remaining packages cover parsing: the media type axis is what the split follows, and
 retrieval sits at its head rather than beside it.
@@ -76,10 +76,15 @@ const report = lazy(async () => service(getSpace)(await path(source))); // ❌
 
 # Testing
 
-The root `vitest.config.ts` aliases all workspace `@metreeca/mime*` packages to their TypeScript source via regex, so
-vitest transpiles directly from `src/` without requiring a prior build step. The resolver maps each `@metreeca/mime*`
-specifier to `packages/<package>/src`; the aliases are convention-based and require no manual updates when adding
-packages or subpath exports.
+The root `vitest.config.ts` resolves imports of symlinked `@metreeca/*` packages, both workspace packages and siblings
+linked by `npm run setup`, to the TypeScript source their `@metreeca/source` export entries declare, so tests run
+against `src/` without a prior build. Packages installed from the registry keep resolving to their published `dist`.
+An export entry lacking the condition falls back to `dist` as well, and tests then see that package as last built.
+
+> [!CAUTION]
+> **NEVER** enable `@metreeca/source` through vitest `resolve.conditions`. Published manifests carry the condition
+> while their packages ship no `src/`, and Vite does not fall back to `default` on a missing target, so a global
+> condition breaks every package installed from the registry that declares it, as happens under `npm ci` in CI.
 
 # Version Management
 

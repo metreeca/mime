@@ -17,8 +17,8 @@
 /**
  * JSON processing tasks.
  *
- * Parses JSON payloads, addresses the values they hold by path, retains the ones meeting the constraints a consumer
- * states, and narrows them to the types it expects.
+ * Provides ready-made {@link https://github.com/metreeca/flow @metreeca/flow} tasks and helpers for processing JSON
+ * content in pipelines run by the {@link https://github.com/metreeca/gear @metreeca/gear} executor.
  *
  * @module index
  *

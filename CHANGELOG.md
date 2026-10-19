@@ -7,12 +7,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.2.0](https://github.com/metreeca/mime/compare/v0.1.1...HEAD)
 
+### Added
+
+- `@metreeca/mime-jsonld` — JSON-LD processing tasks, shaped by `@metreeca/blue` blueprints
+
 ### Changed
 
 - Upgrade `@metreeca/core` to `^0.13.0`
 - Upgrade `@metreeca/flow` to `^0.12.0`
 - Upgrade `@metreeca/http` to `^0.5.0`
 - Upgrade `@metreeca/tape` to `^0.12.0`
+
+### Removed
+
+- `@metreeca/mime` package, which exported no API: install the task packages directly, alongside `@metreeca/gear`
 
 ## [0.1.1](https://github.com/metreeca/mime/compare/v0.1.0...v0.1.1) - 2026-10-14
 

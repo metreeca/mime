@@ -11,10 +11,9 @@
 
 # Overview
 
-`@metreeca/mime` is a standalone, general-purpose monorepo collecting the content access framework core and its media
-type task packages, each sitting directly under `packages/` (for example `packages/mime-csv/`).
+`@metreeca/mime` is a standalone, general-purpose monorepo collecting task packages, one for each media type it handles.
 
-Jobs run under the `@metreeca/gear` executor: this repository contributes retrieval and parsing tasks, **NEVER** an
+Jobs run under the `@metreeca/gear` executor: this repository contributes content processing tasks, **NEVER** an
 execution runtime of its own. Reach for `executor`, `bind` and `service` from `@metreeca/gear` rather than
 reimplementing them, and keep the service contracts compatible with the ones `@metreeca/gear` already resolves.
 
@@ -42,15 +41,15 @@ reimplementing them, and keep the service contracts compatible with the ones `@m
 
 # Package Layout
 
-The root `package.json` `workspaces` glob (`packages/*`) covers the framework packages, each in its own directory
-immediately under `packages/` (for example `packages/mime`).
+The root `package.json` `workspaces` glob (`packages/*`) covers the task packages, each in its own directory
+immediately under `packages/` (for example `packages/mime-csv`), with no shared core package above them.
 
 Task packages are self-contained leaves named after the media type they handle, not after the library they parse it
 with: `mime-xml`, not `mime-htmlparser`. Each pulls in only the libraries its own media type needs, declaring no
 dependency it doesn't import.
 
-`mime-url` covers retrieval, the remaining packages cover parsing: the media type axis is what the split follows, and
-retrieval sits at its head rather than beside it.
+The split follows the media type axis, never the kind of processing: each package carries every task for its own
+type, whether it parses, selects or validates content, so a new task joins the package of the type it handles.
 
 # Shared Utilities
 

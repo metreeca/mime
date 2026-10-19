@@ -1,12 +1,14 @@
 {
-  "name": "@metreeca/mime",
+  "name": "@metreeca/mime-jsonld",
   "version": "0.2.0",
-  "description": "Content access contracts and shared services for @metreeca/mime.",
+  "description": "JSON-LD processing tasks for @metreeca/mime.",
   "keywords": [
     "typescript",
     "pipeline",
     "etl",
-    "extraction"
+    "extraction",
+    "json-ld",
+    "linked-data"
   ],
   "homepage": "https://metreeca.github.io/mime/",
   "bugs": {
@@ -22,7 +24,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/metreeca/mime.git",
-    "directory": "packages/mime"
+    "directory": "packages/mime-jsonld"
   },
   "type": "module",
   "sideEffects": false,
@@ -44,6 +46,13 @@
     "clean": "rm dist docs node_modules",
     "build": "rm dist && tsc -p tsconfig.build.json",
     "check": "npx vitest --typecheck run"
+  },
+  "dependencies": {
+    "@metreeca/blue": "^0.12.1",
+    "@metreeca/core": "^0.13.0",
+    "@metreeca/flow": "^0.12.0",
+    "@metreeca/http": "^0.5.0",
+    "@metreeca/tape": "^0.12.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",

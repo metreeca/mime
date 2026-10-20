@@ -2,10 +2,10 @@
 
 Ready-made tasks for parsing and serialising content by media type.
 
-**@metreeca/mime** brings ready-made [@metreeca/flow](https://github.com/metreeca/flow) tasks for converting content
+**@metreeca/mime** provides ready-made [@metreeca/flow](https://github.com/metreeca/flow) tasks for converting content
 between the usual interchange formats and the values a pipeline works on: parsing documents into records and serialising
 results back into documents. The tasks run under the [@metreeca/gear](https://github.com/metreeca/gear) job executor,
-which supplies the shared services they draw on.
+which supplies the shared services they draw on and releases them once the run ends.
 
 - **Ready-Made Tasks**: parsing and serialisation, chaining alongside any other task
 - **Minimal Footprint**: one package per media type, each pulling in only the libraries that type needs

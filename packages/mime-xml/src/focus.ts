@@ -75,9 +75,28 @@ import { process } from "./focus.core.js";
  *
  * @group Factories
  */
-export function focus(): Task<AnyNode, Document> {
+export function focus(): Task<AnyNode, Document>;
 
-	return trees => items((async function* () {
+/**
+ * Extracts the main content of a tree.
+ *
+ * Works on a tree already at hand, outside a feed, selecting and wrapping its main content exactly as the feed task
+ * does, so that a caller can detect a tree holding no content and choose a fallback for it.
+ *
+ * @param tree The parsed X/HTML tree
+ *
+ * @returns A document holding the main content of `tree`, or `undefined` if `tree` holds no content
+ *
+ * @group Factories
+ */
+export function focus(tree: AnyNode): undefined | Document;
+
+/**
+ * Extracts main content.
+ */
+export function focus(tree?: AnyNode): Task<AnyNode, Document> | undefined | Document {
+
+	return tree !== undefined ? process(tree) : trees => items((async function* () {
 
 		for await (const tree of trees) {
 

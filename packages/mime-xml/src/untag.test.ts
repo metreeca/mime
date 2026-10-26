@@ -650,4 +650,10 @@ describe("untag", () => {
 
 	});
 
+	it("renders a tree at hand", async () => {
+
+		expect(untag(tree(`<p>alpha</p>`))).toBe("alpha");
+
+	});
+
 });

@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - `@metreeca/mime-xml` — `focus(tree)` and `untag(tree)` overloads, processing a single tree outside a feed
+- `@metreeca/mime-xml` — `unwrap()` task, extracting the JSON-LD values X/HTML trees embed in their scripts
 
 ## [0.2.0](https://github.com/metreeca/mime/compare/v0.1.1...v0.2.0) - 2026-10-19
 

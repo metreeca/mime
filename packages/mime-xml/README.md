@@ -22,13 +22,14 @@ npm install @metreeca/mime-xml  # this package
 
 # Usage
 
-| Task               | Description       |
-|--------------------|-------------------|
-| [`xml()`][xml]     | XML parser        |
-| [`html()`][html]   | HTML parser       |
-| [`xpath()`][xpath] | XPath selector    |
-| [`focus()`][focus] | Content extractor |
-| [`untag()`][untag] | Markdown renderer |
+| Task                 | Description               |
+|----------------------|---------------------------|
+| [`xml()`][xml]       | XML parser                |
+| [`html()`][html]     | HTML parser               |
+| [`xpath()`][xpath]   | XPath selector            |
+| [`focus()`][focus]   | Content extractor         |
+| [`untag()`][untag]   | Markdown renderer         |
+| [`unwrap()`][unwrap] | Structured data extractor |
 
 [xml]: https://metreeca.github.io/mime/functions/_metreeca_mime-xml.xml.html
 
@@ -39,6 +40,8 @@ npm install @metreeca/mime-xml  # this package
 [focus]: https://metreeca.github.io/mime/functions/_metreeca_mime-xml.focus.html
 
 [untag]: https://metreeca.github.io/mime/functions/_metreeca_mime-xml.untag.html
+
+[unwrap]: https://metreeca.github.io/mime/functions/_metreeca_mime-xml.unwrap.html
 
 # Support
 

@@ -37,6 +37,7 @@ export * from "./html.js";
 export * from "./xpath.js";
 export * from "./focus.js";
 export * from "./untag.js";
+export * from "./unwrap.js";
 
 
 /**

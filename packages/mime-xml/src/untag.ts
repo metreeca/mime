@@ -102,27 +102,8 @@ import { process } from "./untag.core.js";
  *
  * @group Factories
  */
-export function untag(): Task<AnyNode, Markdown>;
+export function untag(): Task<AnyNode, Markdown> {
 
-/**
- * Renders a tree as Markdown.
- *
- * Works on a tree already at hand, outside a feed, producing exactly the rendering the feed task emits for it, so
- * that a caller can inspect the text of a single page before deciding what to do with it.
- *
- * @param tree The parsed X/HTML tree
- *
- * @returns The Markdown rendering of `tree`; an empty string if `tree` holds no content, title or base URL
- *
- * @group Factories
- */
-export function untag(tree: AnyNode): Markdown;
-
-/**
- * Renders Markdown.
- */
-export function untag(tree?: AnyNode): Task<AnyNode, Markdown> | Markdown {
-
-	return tree !== undefined ? process(tree) : map(process);
+	return map(process);
 
 }

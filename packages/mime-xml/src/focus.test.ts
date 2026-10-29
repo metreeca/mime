@@ -642,17 +642,4 @@ describe("focus", () => {
 
 	});
 
-	it("extracts the content of a tree at hand", async () => {
-
-		expect(markup(focus(tree(`<nav>alpha</nav><main><p>beta</p></main>`))))
-			.toBe("<main><p>beta</p></main>");
-
-	});
-
-	it("returns undefined for a tree at hand holding no content", async () => {
-
-		expect(focus(tree(``))).toBeUndefined();
-
-	});
-
 });

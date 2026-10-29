@@ -54,28 +54,9 @@ import { xpath } from "./xpath.js";
  *
  * @group Factories
  */
-export function unwrap(): Task<AnyNode, readonly Value[]>;
+export function unwrap(): Task<AnyNode, readonly Value[]> {
 
-/**
- * Extracts the structured data embedded in a tree.
- *
- * Works on a tree already at hand, outside a feed, and returns exactly the list the feed task emits for it. A caller
- * can thus fall back on the structured data of a single page, for instance if the page holds no main content.
- *
- * @param tree The parsed X/HTML tree
- *
- * @returns The JSON-LD values embedded in `tree`, in document order; an empty array if `tree` embeds none
- *
- * @group Factories
- */
-export function unwrap(tree: AnyNode): readonly Value[];
-
-/**
- * Extracts structured data.
- */
-export function unwrap(tree?: AnyNode): Task<AnyNode, readonly Value[]> | readonly Value[] {
-
-	return tree !== undefined ? extract(tree) : map(extract);
+	return map(extract);
 
 
 	function extract(tree: AnyNode): readonly Value[] {

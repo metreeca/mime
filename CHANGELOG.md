@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/metreeca/mime/compare/v0.2.0...HEAD)
 
+### Security
+
+- Upgrade `vite` to `8.3.5` (GHSA-587h-7wmj-h5pm, GHSA-698v-4r3x-3vcv, GHSA-r825-w8mm-5pxw, GHSA-vfpm-58rq-9qcg, GHSA-rq7h-c2jc-7f22, GHSA-9jrq-w75r-8gcw): development dependency, no consumer impact
+
 ## [0.2.0](https://github.com/metreeca/mime/compare/v0.1.1...v0.2.0) - 2026-10-19
 
 ### Added

@@ -1,7 +1,7 @@
 ---
 name: "Task"
 about: "Track a piece of work to be done"
-title: "What needs to be done on Metreeca MIME?"
+title: "What needs to be done on @metreeca/mime?"
 type: "Task"
 ---
 

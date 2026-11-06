@@ -1,7 +1,7 @@
 ---
 name: "Bug Report"
 about: "Create a report to help us improve"
-title: "What's wrong with Metreeca MIME?"
+title: "What's wrong with @metreeca/mime?"
 type: "Bug"
 ---
 
